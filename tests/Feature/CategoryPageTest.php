@@ -18,4 +18,12 @@ class CategoryPageTest extends TestCase
             ->assertSee('CoreLite 14')
             ->assertDontSee('AeroBook Pro 14');
     }
+
+    public function test_a_category_ajax_request_returns_rendered_product_html(): void
+    {
+        $this->get('/categories/laptops', ['X-Requested-With' => 'XMLHttpRequest'])
+            ->assertOk()
+            ->assertJsonPath('category.slug', 'laptops')
+            ->assertJsonStructure(['html', 'title', 'category', 'filters']);
+    }
 }

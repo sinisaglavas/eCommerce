@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Support\StorefrontCatalog;
 use App\Support\StorefrontProductCatalog;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\View\View;
 
@@ -15,7 +16,7 @@ class CategoryController extends Controller
         string $category,
         StorefrontCatalog $catalog,
         StorefrontProductCatalog $products,
-    ): View {
+    ): View|JsonResponse {
         $filters = $request->validate([
             'min_price' => ['nullable', 'numeric', 'min:0'],
             'max_price' => ['nullable', 'numeric', 'min:0'],
@@ -46,11 +47,27 @@ class CategoryController extends Controller
 
         $paginatedProducts->appends($request->except('page'));
 
-        return view('categories.show', [
+        $viewData = [
             'title' => $selectedCategory->name.' – Voltix',
             'category' => $selectedCategory,
             'products' => $paginatedProducts,
             'filters' => $filters,
-        ]);
+        ];
+
+        if ($request->ajax()) {
+            return response()->json([
+                'html' => view('categories.partials.product-results', $viewData)->render(),
+                'title' => $viewData['title'],
+                'category' => [
+                    'name' => $selectedCategory->name,
+                    'slug' => $selectedCategory->slug,
+                    'icon' => $selectedCategory->icon,
+                    'color' => $selectedCategory->color,
+                ],
+                'filters' => $filters,
+            ]);
+        }
+
+        return view('categories.show', $viewData);
     }
 }

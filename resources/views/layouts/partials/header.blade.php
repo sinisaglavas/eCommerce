@@ -92,7 +92,7 @@
           </li>
           @foreach ($categories as $category)
             <li class="nav-item">
-              <a class="nav-link py-3 {{ request()->route('category') === $category->slug ? 'active' : '' }}" href="{{ route('categories.show', $category->slug) }}">
+              <a class="nav-link py-3 {{ request()->route('category') === $category->slug ? 'active' : '' }}" href="{{ route('categories.show', $category->slug) }}" data-ajax-link data-category-nav data-category-slug="{{ $category->slug }}">
                 <svg class="ico"><use href="#i-{{ $category->icon }}"/></svg>{{ $category->name }}
               </a>
             </li>
