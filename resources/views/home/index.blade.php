@@ -85,7 +85,7 @@
         <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-6 g-3">
           @foreach ($categories as $category)
             <div class="col">
-              <a href="#" class="category-card card h-100 border text-center p-4 align-items-center text-body {{ $category->color }} {{ $category->badge ? 'position-relative' : '' }}">
+              <a href="{{ route('categories.show', $category->slug) }}" class="category-card card h-100 border text-center p-4 align-items-center text-body {{ $category->color }} {{ $category->badge ? 'position-relative' : '' }}">
                 @if ($category->badge)
                   <span class="badge {{ $category->badgeClass }} position-absolute top-0 end-0 m-2">{{ $category->badge }}</span>
                 @endif

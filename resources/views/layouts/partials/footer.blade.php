@@ -17,7 +17,7 @@
           <h6 class="fw-semibold mb-3 d-flex align-items-center gap-2"><svg class="ico"><use href="#i-grid"/></svg> Categories</h6>
           <ul class="list-unstyled small d-grid gap-2">
             @foreach ($categories->take(4) as $category)
-              <li><a href="#">{{ $category->name }}</a></li>
+              <li><a href="{{ route('categories.show', $category->slug) }}">{{ $category->name }}</a></li>
             @endforeach
           </ul>
         </div>

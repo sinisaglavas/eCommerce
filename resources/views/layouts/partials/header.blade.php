@@ -86,13 +86,13 @@
       <div class="container">
         <ul class="nav">
           <li class="nav-item">
-            <a class="nav-link active py-3" href="#categories">
+            <a class="nav-link py-3 {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}#categories">
               <svg class="ico"><use href="#i-grid"/></svg>All categories
             </a>
           </li>
           @foreach ($categories as $category)
             <li class="nav-item">
-              <a class="nav-link py-3" href="#">
+              <a class="nav-link py-3 {{ request()->route('category') === $category->slug ? 'active' : '' }}" href="{{ route('categories.show', $category->slug) }}">
                 <svg class="ico"><use href="#i-{{ $category->icon }}"/></svg>{{ $category->name }}
               </a>
             </li>
