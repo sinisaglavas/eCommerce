@@ -56,15 +56,9 @@ class CategoryController extends Controller
 
         if ($request->ajax()) {
             return response()->json([
-                'html' => view('categories.partials.product-results', $viewData)->render(),
+                'html' => view('categories.partials.page-content', $viewData)->render(),
                 'title' => $viewData['title'],
-                'category' => [
-                    'name' => $selectedCategory->name,
-                    'slug' => $selectedCategory->slug,
-                    'icon' => $selectedCategory->icon,
-                    'color' => $selectedCategory->color,
-                ],
-                'filters' => $filters,
+                'activeCategorySlug' => $selectedCategory->slug,
             ]);
         }
 

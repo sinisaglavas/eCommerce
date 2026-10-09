@@ -90,10 +90,11 @@
               <svg class="ico"><use href="#i-grid"/></svg>All categories
             </a>
           </li>
-          @foreach ($categories as $category)
+          @php($activeCategorySlug = request()->route('category') ?? (($category ?? null)?->slug))
+          @foreach ($categories as $navigationCategory)
             <li class="nav-item">
-              <a class="nav-link py-3 {{ request()->route('category') === $category->slug ? 'active' : '' }}" href="{{ route('categories.show', $category->slug) }}" data-ajax-link data-category-nav data-category-slug="{{ $category->slug }}">
-                <svg class="ico"><use href="#i-{{ $category->icon }}"/></svg>{{ $category->name }}
+              <a class="nav-link py-3 {{ $activeCategorySlug === $navigationCategory->slug ? 'active' : '' }}" href="{{ route('categories.show', $navigationCategory->slug) }}" data-ajax-link data-update-target="#page-content" data-category-nav data-category-slug="{{ $navigationCategory->slug }}">
+                <svg class="ico"><use href="#i-{{ $navigationCategory->icon }}"/></svg>{{ $navigationCategory->name }}
               </a>
             </li>
           @endforeach

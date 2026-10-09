@@ -1,10 +1,11 @@
 const SELECTORS = Object.freeze({
-    productContent: '#product-content',
-    categoryTitle: '#category-title',
-    categoryIcon: '#category-icon',
-    categoryFilterForm: '#category-filter-form',
-    categoryNavigationLink: '[data-category-nav]',
     ajaxLink: '[data-ajax-link]',
+    ajaxFilterForm: '[data-ajax-filter-form]',
+    categoryNavigationLink: '[data-category-nav]',
+});
+
+const ATTRIBUTES = Object.freeze({
+    updateTarget: 'data-update-target',
 });
 
 const AJAX_HEADERS = Object.freeze({
@@ -12,10 +13,8 @@ const AJAX_HEADERS = Object.freeze({
     Accept: 'application/json',
 });
 
-const CATEGORY_PATH_PREFIX = '/categories/';
-
-const getProductContent = () => document.querySelector(SELECTORS.productContent);
-const getFilterForm = () => document.querySelector(SELECTORS.categoryFilterForm);
+const PAGE_CONTENT_TARGET = '#page-content';
+const ASYNC_PAGE_PATHS = ['/categories/', '/products/'];
 
 const isModifiedClick = (event) => event.button !== 0
     || event.metaKey
@@ -23,47 +22,11 @@ const isModifiedClick = (event) => event.button !== 0
     || event.shiftKey
     || event.altKey;
 
-const getCategoryUrl = (slug) => {
-    const navigationLink = document.querySelector(
-        `[data-category-nav][data-category-slug="${CSS.escape(slug)}"]`,
-    );
+const getTargetElement = (target) => document.querySelector(target);
 
-    return navigationLink?.href ?? new URL(`${CATEGORY_PATH_PREFIX}${slug}`, window.location.origin).href;
-};
+const shouldUpdateWithAjax = (target) => target && getTargetElement(target);
 
-const setFilterValues = (filters) => {
-    const filterForm = getFilterForm();
-
-    if (!filterForm) {
-        return;
-    }
-
-    filterForm.elements.min_price.value = filters.min_price ?? '';
-    filterForm.elements.max_price.value = filters.max_price ?? '';
-};
-
-const updateCategoryDetails = (category, filters) => {
-    document.querySelector(SELECTORS.categoryTitle)?.replaceChildren(category.name);
-
-    const categoryIcon = document.querySelector(SELECTORS.categoryIcon);
-    if (categoryIcon) {
-        categoryIcon.className = `section-icon ${category.color}`;
-        categoryIcon.querySelector('use')?.setAttribute('href', `#i-${category.icon}`);
-    }
-
-    document.querySelectorAll(SELECTORS.categoryNavigationLink).forEach((link) => {
-        link.classList.toggle('active', link.dataset.categorySlug === category.slug);
-    });
-
-    const filterForm = getFilterForm();
-    if (filterForm) {
-        filterForm.action = getCategoryUrl(category.slug);
-    }
-
-    setFilterValues(filters);
-};
-
-const fetchProductContent = async (url) => {
+const fetchRenderedContent = async (url) => {
     const response = await fetch(url, { headers: AJAX_HEADERS });
 
     if (!response.ok) {
@@ -73,22 +36,35 @@ const fetchProductContent = async (url) => {
     return response.json();
 };
 
-const updateProductContent = async (url, { pushState = true } = {}) => {
-    const productContent = getProductContent();
+const updateActiveCategoryNavigation = (activeCategorySlug) => {
+    if (!activeCategorySlug) {
+        return;
+    }
 
-    if (!productContent) {
+    document.querySelectorAll(SELECTORS.categoryNavigationLink).forEach((link) => {
+        link.classList.toggle('active', link.dataset.categorySlug === activeCategorySlug);
+    });
+};
+
+/**
+ * Fetches backend-rendered Blade HTML and replaces the configured page region.
+ */
+export const updateContent = async ({ url, target, pushState = true }) => {
+    const targetElement = getTargetElement(target);
+
+    if (!targetElement) {
         window.location.assign(url);
         return;
     }
 
-    productContent.setAttribute('aria-busy', 'true');
+    targetElement.setAttribute('aria-busy', 'true');
 
     try {
-        const payload = await fetchProductContent(url);
+        const payload = await fetchRenderedContent(url);
 
-        productContent.innerHTML = payload.html;
+        targetElement.innerHTML = payload.html;
         document.title = payload.title;
-        updateCategoryDetails(payload.category, payload.filters);
+        updateActiveCategoryNavigation(payload.activeCategorySlug);
 
         if (pushState) {
             window.history.pushState({}, '', url);
@@ -96,45 +72,53 @@ const updateProductContent = async (url, { pushState = true } = {}) => {
     } catch {
         window.location.assign(url);
     } finally {
-        productContent.removeAttribute('aria-busy');
+        targetElement.removeAttribute('aria-busy');
     }
 };
 
 const handleAjaxLinkClick = (event) => {
     const link = event.target.closest(SELECTORS.ajaxLink);
+    const target = link?.getAttribute(ATTRIBUTES.updateTarget);
 
-    if (!link || event.defaultPrevented || isModifiedClick(event) || link.closest('.disabled')) {
+    if (!link || event.defaultPrevented || isModifiedClick(event) || link.closest('.disabled') || !shouldUpdateWithAjax(target)) {
         return;
     }
 
     event.preventDefault();
-    updateProductContent(link.href);
+    updateContent({ url: link.href, target });
 };
 
 const handleFilterSubmit = (event) => {
-    const filterForm = event.target.closest(SELECTORS.categoryFilterForm);
+    const form = event.target.closest(SELECTORS.ajaxFilterForm);
+    const target = form?.getAttribute(ATTRIBUTES.updateTarget);
 
-    if (!filterForm || !getProductContent()) {
+    if (!form || !shouldUpdateWithAjax(target)) {
         return;
     }
 
     event.preventDefault();
 
-    const url = new URL(filterForm.action);
-    new FormData(filterForm).forEach((value, key) => {
+    const url = new URL(form.action);
+    new FormData(form).forEach((value, key) => {
         if (value !== '') {
             url.searchParams.set(key, value);
         }
     });
 
-    updateProductContent(url.toString());
+    updateContent({ url: url.toString(), target });
 };
+
+const isAsyncPage = () => ASYNC_PAGE_PATHS.some((path) => window.location.pathname.startsWith(path));
 
 document.addEventListener('click', handleAjaxLinkClick);
 document.addEventListener('submit', handleFilterSubmit);
 
 window.addEventListener('popstate', () => {
-    if (window.location.pathname.startsWith(CATEGORY_PATH_PREFIX)) {
-        updateProductContent(window.location.href, { pushState: false });
+    if (isAsyncPage() && getTargetElement(PAGE_CONTENT_TARGET)) {
+        updateContent({
+            url: window.location.href,
+            target: PAGE_CONTENT_TARGET,
+            pushState: false,
+        });
     }
 });

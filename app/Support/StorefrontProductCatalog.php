@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 final class StorefrontProductCatalog
 {
@@ -22,6 +23,11 @@ final class StorefrontProductCatalog
                 fn (object $product) => $product->price <= $maxPrice,
             ))
             ->values();
+    }
+
+    public function findBySlug(string $productSlug): ?object
+    {
+        return $this->products()->firstWhere('slug', $productSlug);
     }
 
     /**
@@ -96,6 +102,18 @@ final class StorefrontProductCatalog
         ])->map(function (object $product) use ($images): object {
             $productImages = $images[$product->categorySlug];
             $product->image = $productImages[crc32($product->name) % count($productImages)];
+            $product->slug = Str::slug($product->name);
+            $product->description = sprintf(
+                '%s by %s combines dependable performance with a clean, modern design for everyday use.',
+                $product->name,
+                $product->brand,
+            );
+            $product->specifications = [
+                'Brand' => $product->brand,
+                'Category' => Str::headline($product->categorySlug),
+                'Warranty' => '24 months',
+                'Availability' => 'In stock',
+            ];
 
             return $product;
         });

@@ -4,13 +4,13 @@
   <div class="card border p-5 text-center">
     <h2 class="h4">No products found</h2>
     <p class="text-secondary mb-3">Try expanding your price range.</p>
-    <a href="{{ route('categories.show', $category->slug) }}" class="btn btn-outline-primary align-self-center" data-ajax-link>Clear filters</a>
+    <a href="{{ route('categories.show', $category->slug) }}" class="btn btn-outline-primary align-self-center" data-ajax-link data-update-target="#page-content">Clear filters</a>
   </div>
 @else
   <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-3 g-4">
     @foreach ($products as $product)
       <div class="col">
-        <article class="product-card card h-100 border overflow-hidden">
+        <a href="{{ route('products.show', $product->slug) }}" class="product-card card h-100 border overflow-hidden text-body" data-ajax-link data-update-target="#page-content">
           <div class="product-art {{ $product->accent }}">
             <img src="{{ $product->image }}" alt="{{ $product->name }}" loading="lazy">
           </div>
@@ -24,10 +24,10 @@
                   <del class="text-secondary small ms-1">€{{ number_format($product->oldPrice, 0, ',', '.') }}</del>
                 @endif
               </div>
-              <button class="btn btn-primary btn-sm" type="button">Add to cart</button>
+              <span class="btn btn-primary btn-sm">View product</span>
             </div>
           </div>
-        </article>
+        </a>
       </div>
     @endforeach
   </div>
@@ -36,15 +36,15 @@
     <nav class="mt-5" aria-label="Product pagination">
       <ul class="pagination justify-content-center mb-0">
         <li class="page-item {{ $products->onFirstPage() ? 'disabled' : '' }}">
-          <a class="page-link" href="{{ $products->previousPageUrl() }}" aria-label="Previous" data-ajax-link>&laquo;</a>
+          <a class="page-link" href="{{ $products->previousPageUrl() }}" aria-label="Previous" data-ajax-link data-update-target="#page-content">&laquo;</a>
         </li>
         @for ($page = 1; $page <= $products->lastPage(); $page++)
           <li class="page-item {{ $page === $products->currentPage() ? 'active' : '' }}">
-            <a class="page-link" href="{{ $products->url($page) }}" data-ajax-link>{{ $page }}</a>
+            <a class="page-link" href="{{ $products->url($page) }}" data-ajax-link data-update-target="#page-content">{{ $page }}</a>
           </li>
         @endfor
         <li class="page-item {{ $products->hasMorePages() ? '' : 'disabled' }}">
-          <a class="page-link" href="{{ $products->nextPageUrl() }}" aria-label="Next" data-ajax-link>&raquo;</a>
+          <a class="page-link" href="{{ $products->nextPageUrl() }}" aria-label="Next" data-ajax-link data-update-target="#page-content">&raquo;</a>
         </li>
       </ul>
     </nav>

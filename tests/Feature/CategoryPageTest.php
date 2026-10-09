@@ -23,7 +23,16 @@ class CategoryPageTest extends TestCase
     {
         $this->get('/categories/laptops', ['X-Requested-With' => 'XMLHttpRequest'])
             ->assertOk()
-            ->assertJsonPath('category.slug', 'laptops')
-            ->assertJsonStructure(['html', 'title', 'category', 'filters']);
+            ->assertJsonPath('activeCategorySlug', 'laptops')
+            ->assertJsonStructure(['html', 'title', 'activeCategorySlug']);
+    }
+
+    public function test_a_product_page_can_be_rendered_for_ajax_navigation(): void
+    {
+        $this->get('/products/aerobook-pro-14', ['X-Requested-With' => 'XMLHttpRequest'])
+            ->assertOk()
+            ->assertJsonPath('activeCategorySlug', 'laptops')
+            ->assertJsonPath('title', 'AeroBook Pro 14 – Voltix')
+            ->assertJsonStructure(['html', 'title', 'activeCategorySlug']);
     }
 }
