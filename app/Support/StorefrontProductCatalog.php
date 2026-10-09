@@ -39,28 +39,54 @@ final class StorefrontProductCatalog
             'laptops' => [
                 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=900&q=80',
                 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1531297461314-07e5b90ba683?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80',
             ],
             'smartphones' => [
                 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=900&q=80',
                 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1556656793-08538906a9f8?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1580910051074-3eb694886505?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1551816230-ef5deaed4a26?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1565849904461-04a58ad377e0?auto=format&fit=crop&w=900&q=80',
             ],
             'tvs' => [
                 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1577979749830-f1d742b967c9?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=900&q=80',
                 'https://images.unsplash.com/photo-1461151304267-38535e780c79?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80',
             ],
             'monitors' => [
                 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=900&q=80',
                 'https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1547082299-de196ea013d6?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=900&q=80',
             ],
             'audio' => [
                 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80',
                 'https://images.unsplash.com/photo-1613629758552-443027994609?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1505751171710-1f6d0ace5a85?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1487215078519-e21cc028cb29?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=900&q=80',
             ],
             'gaming' => [
                 'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?auto=format&fit=crop&w=900&q=80',
                 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1605640194512-2f7440046c2a?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1635221683689-eafdfe576abd?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1587653914557-98f6c6f9577c?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1578898395216-78dae5d29344?auto=format&fit=crop&w=900&q=80',
             ],
         ];
+
+        $imagePositions = [];
 
         return collect([
             (object) ['name' => 'AeroBook Pro 14', 'categorySlug' => 'laptops', 'brand' => 'Voltix', 'price' => 1_299, 'oldPrice' => null, 'icon' => 'laptop', 'accent' => 'c-blue'],
@@ -99,10 +125,12 @@ final class StorefrontProductCatalog
             (object) ['name' => 'Vortex Gaming PC', 'categorySlug' => 'gaming', 'brand' => 'Vortex', 'price' => 1_899, 'oldPrice' => 2_099, 'icon' => 'gamepad', 'accent' => 'c-red'],
             (object) ['name' => 'Neon RGB Mouse', 'categorySlug' => 'gaming', 'brand' => 'Neon', 'price' => 79, 'oldPrice' => null, 'icon' => 'gamepad', 'accent' => 'c-red'],
             (object) ['name' => 'Quest VR Headset', 'categorySlug' => 'gaming', 'brand' => 'Quest', 'price' => 449, 'oldPrice' => null, 'icon' => 'gamepad', 'accent' => 'c-red'],
-        ])->map(function (object $product) use ($images): object {
-            $productImages = $images[$product->categorySlug];
-            $product->image = $productImages[crc32($product->name) % count($productImages)];
+        ])->map(function (object $product) use ($images, &$imagePositions): object {
             $product->slug = Str::slug($product->name);
+            $imagePosition = $imagePositions[$product->categorySlug] ?? 0;
+            $product->image = $images[$product->categorySlug][$imagePosition];
+            $product->gallery = [$product->image];
+            $imagePositions[$product->categorySlug] = $imagePosition + 1;
             $product->description = sprintf(
                 '%s by %s combines dependable performance with a clean, modern design for everyday use.',
                 $product->name,

@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Support\StorefrontCatalog;
+use App\Support\StorefrontProductCatalog;
 use Tests\TestCase;
 
 class CategoryPageTest extends TestCase
@@ -34,5 +36,22 @@ class CategoryPageTest extends TestCase
             ->assertJsonPath('activeCategorySlug', 'laptops')
             ->assertJsonPath('title', 'AeroBook Pro 14 – Voltix')
             ->assertJsonStructure(['html', 'title', 'activeCategorySlug']);
+    }
+
+    public function test_each_category_uses_unique_product_images(): void
+    {
+        $catalog = app(StorefrontCatalog::class);
+        $products = app(StorefrontProductCatalog::class);
+
+        $catalog->categories()->each(function (object $category) use ($products): void {
+            $images = $products->forCategory($category->slug)->pluck('image');
+
+            $this->assertCount(6, $images->unique());
+        });
+
+        $allImages = $catalog->categories()
+            ->flatMap(fn (object $category) => $products->forCategory($category->slug)->pluck('image'));
+
+        $this->assertCount(36, $allImages->unique());
     }
 }
