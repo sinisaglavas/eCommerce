@@ -22,10 +22,16 @@ class ProductController extends Controller
 
         $category = $catalog->categories()->firstWhere('slug', $selectedProduct->categorySlug);
 
+        $relatedProducts = $products->forCategory($selectedProduct->categorySlug)
+            ->reject(fn (object $relatedProduct) => $relatedProduct->slug === $selectedProduct->slug)
+            ->take(4)
+            ->values();
+
         $viewData = [
             'title' => $selectedProduct->name.' – Voltix',
             'product' => $selectedProduct,
             'category' => $category,
+            'relatedProducts' => $relatedProducts,
         ];
 
         if ($request->ajax()) {

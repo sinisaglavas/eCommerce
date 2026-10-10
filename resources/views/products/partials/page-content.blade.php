@@ -78,5 +78,24 @@
         </div>
       </div>
     </section>
+
+    @if ($relatedProducts->isNotEmpty())
+      <section class="mt-5">
+        <div class="d-flex align-items-center gap-3 mb-4">
+          <span class="section-icon {{ $category->color }}"><svg class="ico"><use href="#i-sparkle"/></svg></span>
+          <div>
+            <h2 class="h3 fw-bold section-title mb-0">You might also like</h2>
+            <p class="text-secondary mb-0">More from {{ $category->name }}</p>
+          </div>
+        </div>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-4">
+          @foreach ($relatedProducts as $relatedProduct)
+            <div class="col">
+              @include('partials.product-card', ['product' => $relatedProduct])
+            </div>
+          @endforeach
+        </div>
+      </section>
+    @endif
   </div>
 </section>

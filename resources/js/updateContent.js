@@ -2,6 +2,7 @@ const SELECTORS = Object.freeze({
     ajaxLink: '[data-ajax-link]',
     ajaxFilterForm: '[data-ajax-filter-form]',
     categoryNavigationLink: '[data-category-nav]',
+    wishlistToggle: '[data-wishlist-toggle]',
 });
 
 const ATTRIBUTES = Object.freeze({
@@ -108,8 +109,20 @@ const handleFilterSubmit = (event) => {
     updateContent({ url: url.toString(), target });
 };
 
+const handleWishlistToggle = (event) => {
+    const button = event.target.closest(SELECTORS.wishlistToggle);
+
+    if (!button) {
+        return;
+    }
+
+    event.preventDefault();
+    button.classList.toggle('is-active');
+};
+
 const isAsyncPage = () => ASYNC_PAGE_PATHS.some((path) => window.location.pathname.startsWith(path));
 
+document.addEventListener('click', handleWishlistToggle);
 document.addEventListener('click', handleAjaxLinkClick);
 document.addEventListener('submit', handleFilterSubmit);
 
