@@ -40,9 +40,23 @@ final class StorefrontProductCatalog
                 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=900&q=80',
                 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=900&q=80',
                 'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?auto=format&fit=crop&w=900&q=80',
-                'https://images.unsplash.com/photo-1531297461314-07e5b90ba683?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1618424181497-157f25b6ddd5?auto=format&fit=crop&w=900&q=80',
                 'https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&w=900&q=80',
                 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1779896412104-0f589e7a4e94?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1499914485622-a88fac536970?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1484788984921-03950022c9ef?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1779896412244-aed1d2f8bed2?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1515378960530-7c0da6231fb1?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1508780709619-79562169bc64?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1537498425277-c283d32ef9db?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1511385348-a52b4a160dc2?auto=format&fit=crop&w=900&q=80',
             ],
             'smartphones' => [
                 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=900&q=80',
@@ -54,7 +68,7 @@ final class StorefrontProductCatalog
             ],
             'tvs' => [
                 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=900&q=80',
-                'https://images.unsplash.com/photo-1577979749830-f1d742b967c9?auto=format&fit=crop&w=900&q=80',
+                'https://images.unsplash.com/photo-1509281373149-e957c6296406?auto=format&fit=crop&w=900&q=80',
                 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=900&q=80',
                 'https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&fit=crop&w=900&q=80',
                 'https://images.unsplash.com/photo-1461151304267-38535e780c79?auto=format&fit=crop&w=900&q=80',
@@ -95,6 +109,20 @@ final class StorefrontProductCatalog
             (object) ['name' => 'ZenBook 15', 'categorySlug' => 'laptops', 'brand' => 'Zen', 'price' => 1_159, 'oldPrice' => 1_299, 'icon' => 'laptop', 'accent' => 'c-blue'],
             (object) ['name' => 'CoreLite 14', 'categorySlug' => 'laptops', 'brand' => 'Core', 'price' => 729, 'oldPrice' => null, 'icon' => 'laptop', 'accent' => 'c-blue'],
             (object) ['name' => 'Raptor G17', 'categorySlug' => 'laptops', 'brand' => 'Raptor', 'price' => 1_999, 'oldPrice' => null, 'icon' => 'laptop', 'accent' => 'c-blue'],
+            (object) ['name' => 'AeroBook Pro 16', 'categorySlug' => 'laptops', 'brand' => 'Voltix', 'price' => 1_499, 'oldPrice' => null, 'icon' => 'laptop', 'accent' => 'c-blue'],
+            (object) ['name' => 'NovaBook Ultra 14', 'categorySlug' => 'laptops', 'brand' => 'Nova', 'price' => 1_099, 'oldPrice' => 1_249, 'icon' => 'laptop', 'accent' => 'c-blue'],
+            (object) ['name' => 'Titan X18 Pro', 'categorySlug' => 'laptops', 'brand' => 'Titan', 'price' => 2_199, 'oldPrice' => null, 'icon' => 'laptop', 'accent' => 'c-blue'],
+            (object) ['name' => 'ZenBook Flip 14', 'categorySlug' => 'laptops', 'brand' => 'Zen', 'price' => 1_049, 'oldPrice' => null, 'icon' => 'laptop', 'accent' => 'c-blue'],
+            (object) ['name' => 'CoreLite 13', 'categorySlug' => 'laptops', 'brand' => 'Core', 'price' => 599, 'oldPrice' => 679, 'icon' => 'laptop', 'accent' => 'c-blue'],
+            (object) ['name' => 'Raptor G15', 'categorySlug' => 'laptops', 'brand' => 'Raptor', 'price' => 1_649, 'oldPrice' => null, 'icon' => 'laptop', 'accent' => 'c-blue'],
+            (object) ['name' => 'Pulse Slim 13', 'categorySlug' => 'laptops', 'brand' => 'Pulse', 'price' => 849, 'oldPrice' => null, 'icon' => 'laptop', 'accent' => 'c-blue'],
+            (object) ['name' => 'Horizon Pro 15', 'categorySlug' => 'laptops', 'brand' => 'Horizon', 'price' => 1_349, 'oldPrice' => 1_499, 'icon' => 'laptop', 'accent' => 'c-blue'],
+            (object) ['name' => 'Vanguard 17', 'categorySlug' => 'laptops', 'brand' => 'Vanguard', 'price' => 1_899, 'oldPrice' => null, 'icon' => 'laptop', 'accent' => 'c-blue'],
+            (object) ['name' => 'Drift Book 14', 'categorySlug' => 'laptops', 'brand' => 'Drift', 'price' => 779, 'oldPrice' => null, 'icon' => 'laptop', 'accent' => 'c-blue'],
+            (object) ['name' => 'Summit Air 13', 'categorySlug' => 'laptops', 'brand' => 'Summit', 'price' => 949, 'oldPrice' => 1_049, 'icon' => 'laptop', 'accent' => 'c-blue'],
+            (object) ['name' => 'Forge X15', 'categorySlug' => 'laptops', 'brand' => 'Forge', 'price' => 1_799, 'oldPrice' => null, 'icon' => 'laptop', 'accent' => 'c-blue'],
+            (object) ['name' => 'Nimbus 14', 'categorySlug' => 'laptops', 'brand' => 'Nimbus', 'price' => 689, 'oldPrice' => null, 'icon' => 'laptop', 'accent' => 'c-blue'],
+            (object) ['name' => 'Apex Ultra 16', 'categorySlug' => 'laptops', 'brand' => 'Apex', 'price' => 2_399, 'oldPrice' => 2_599, 'icon' => 'laptop', 'accent' => 'c-blue'],
             (object) ['name' => 'Nova One 15', 'categorySlug' => 'smartphones', 'brand' => 'Nova', 'price' => 899, 'oldPrice' => null, 'icon' => 'phone', 'accent' => 'c-violet'],
             (object) ['name' => 'Pixel Pro 9', 'categorySlug' => 'smartphones', 'brand' => 'Pixel', 'price' => 1_099, 'oldPrice' => 1_199, 'icon' => 'phone', 'accent' => 'c-violet'],
             (object) ['name' => 'Orbit S24', 'categorySlug' => 'smartphones', 'brand' => 'Orbit', 'price' => 749, 'oldPrice' => null, 'icon' => 'phone', 'accent' => 'c-violet'],
@@ -127,8 +155,9 @@ final class StorefrontProductCatalog
             (object) ['name' => 'Quest VR Headset', 'categorySlug' => 'gaming', 'brand' => 'Quest', 'price' => 449, 'oldPrice' => null, 'icon' => 'gamepad', 'accent' => 'c-red'],
         ])->map(function (object $product) use ($images, &$imagePositions): object {
             $product->slug = Str::slug($product->name);
+            $categoryImages = $images[$product->categorySlug];
             $imagePosition = $imagePositions[$product->categorySlug] ?? 0;
-            $product->image = $images[$product->categorySlug][$imagePosition];
+            $product->image = $categoryImages[$imagePosition % count($categoryImages)];
             $product->gallery = [$product->image];
             $imagePositions[$product->categorySlug] = $imagePosition + 1;
             $product->description = sprintf(

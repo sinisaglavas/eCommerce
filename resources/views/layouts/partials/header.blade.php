@@ -1,16 +1,3 @@
-  <div class="topbar bg-topbar small py-2 border-bottom">
-    <div class="container d-flex justify-content-between align-items-center">
-      <span class="d-inline-flex align-items-center gap-2" style="color:#cbd5e1">
-        <svg class="ico"><use href="#i-truck"/></svg> Free shipping on orders over €50
-      </span>
-      <div class="d-none d-md-flex gap-4">
-        <a href="#" class="d-inline-flex align-items-center gap-2"><svg class="ico"><use href="#i-pin"/></svg> Stores</a>
-        <a href="#" class="d-inline-flex align-items-center gap-2"><svg class="ico"><use href="#i-package"/></svg> Track order</a>
-        <a href="#" class="d-inline-flex align-items-center gap-2"><svg class="ico"><use href="#i-help"/></svg> Help</a>
-      </div>
-    </div>
-  </div>
-
   <!-- Header -->
   <header class="bg-surface border-bottom sticky-top">
     <div class="container py-3">

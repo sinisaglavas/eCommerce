@@ -1,14 +1,27 @@
 <section class="py-5">
   <div class="container">
-    <a href="{{ route('home') }}#categories" class="small text-secondary d-inline-flex align-items-center gap-2 mb-4">
-      <svg class="ico"><use href="#i-arrow" style="transform:rotate(180deg)"/></svg>All categories
-    </a>
+    <nav aria-label="Breadcrumb" class="small text-secondary d-flex align-items-center gap-2 mb-4">
+      <a href="{{ route('home') }}#categories" class="text-secondary">Home</a>
+      <svg class="ico" style="font-size:12px"><use href="#i-arrow"/></svg>
+      <span class="text-body fw-semibold">{{ $category->name }}</span>
+    </nav>
 
-    <div class="d-flex align-items-center gap-3 mb-4">
-      <span class="section-icon {{ $category->color }}"><svg class="ico"><use href="#i-{{ $category->icon }}"/></svg></span>
-      <div>
-        <p class="text-secondary text-uppercase small fw-semibold mb-1">Category</p>
-        <h1 class="fw-bold section-title mb-0">{{ $category->name }}</h1>
+    <div class="category-hero {{ $category->color }} p-3 d-flex flex-wrap align-items-center gap-3 mb-4">
+      <span class="category-hero-icon"><svg class="ico"><use href="#i-{{ $category->icon }}"/></svg></span>
+
+      <div class="flex-grow-1">
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+          <h1 class="fw-bold h5 mb-0">{{ $category->name }}</h1>
+          @if ($category->badge)
+            <span class="badge rounded-pill {{ $category->badgeClass }}">{{ $category->badge }}</span>
+          @endif
+        </div>
+        <p class="text-secondary small mb-0">{{ $products->total() }} {{ Str::plural('product', $products->total()) }} available</p>
+      </div>
+
+      <div class="d-flex flex-wrap gap-2">
+        <span class="category-stat"><svg class="ico"><use href="#i-truck"/></svg>Fast delivery</span>
+        <span class="category-stat"><svg class="ico"><use href="#i-shield"/></svg>24-month warranty</span>
       </div>
     </div>
 

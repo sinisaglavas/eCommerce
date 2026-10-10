@@ -32,7 +32,7 @@ class CategoryController extends Controller
             isset($filters['max_price']) ? (float) $filters['max_price'] : null,
         );
 
-        $perPage = 4;
+        $perPage = 12;
         $currentPage = max($request->integer('page', 1), 1);
         $paginatedProducts = new LengthAwarePaginator(
             $filteredProducts->forPage($currentPage, $perPage)->values(),

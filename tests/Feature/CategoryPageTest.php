@@ -45,13 +45,14 @@ class CategoryPageTest extends TestCase
 
         $catalog->categories()->each(function (object $category) use ($products): void {
             $images = $products->forCategory($category->slug)->pluck('image');
+            $expectedUniqueImages = $category->slug === 'laptops' ? 20 : 6;
 
-            $this->assertCount(6, $images->unique());
+            $this->assertCount($expectedUniqueImages, $images->unique());
         });
 
         $allImages = $catalog->categories()
             ->flatMap(fn (object $category) => $products->forCategory($category->slug)->pluck('image'));
 
-        $this->assertCount(36, $allImages->unique());
+        $this->assertCount(50, $allImages->unique());
     }
 }
