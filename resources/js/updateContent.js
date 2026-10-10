@@ -15,7 +15,6 @@ const AJAX_HEADERS = Object.freeze({
 });
 
 const PAGE_CONTENT_TARGET = '#page-content';
-const ASYNC_PAGE_PATHS = ['/categories/', '/products/'];
 
 const isModifiedClick = (event) => event.button !== 0
     || event.metaKey
@@ -38,13 +37,22 @@ const fetchRenderedContent = async (url) => {
 };
 
 const updateActiveCategoryNavigation = (activeCategorySlug) => {
-    if (!activeCategorySlug) {
+    document.querySelectorAll(SELECTORS.categoryNavigationLink).forEach((link) => {
+        link.classList.toggle('active', link.dataset.categorySlug === (activeCategorySlug ?? ''));
+    });
+};
+
+const scrollAfterNavigation = (url, pushState) => {
+    const hash = new URL(url, window.location.origin).hash;
+
+    if (hash) {
+        document.querySelector(hash)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         return;
     }
 
-    document.querySelectorAll(SELECTORS.categoryNavigationLink).forEach((link) => {
-        link.classList.toggle('active', link.dataset.categorySlug === activeCategorySlug);
-    });
+    if (pushState) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 };
 
 /**
@@ -70,6 +78,8 @@ export const updateContent = async ({ url, target, pushState = true }) => {
         if (pushState) {
             window.history.pushState({}, '', url);
         }
+
+        scrollAfterNavigation(url, pushState);
     } catch {
         window.location.assign(url);
     } finally {
@@ -120,14 +130,12 @@ const handleWishlistToggle = (event) => {
     button.classList.toggle('is-active');
 };
 
-const isAsyncPage = () => ASYNC_PAGE_PATHS.some((path) => window.location.pathname.startsWith(path));
-
 document.addEventListener('click', handleWishlistToggle);
 document.addEventListener('click', handleAjaxLinkClick);
 document.addEventListener('submit', handleFilterSubmit);
 
 window.addEventListener('popstate', () => {
-    if (isAsyncPage() && getTargetElement(PAGE_CONTENT_TARGET)) {
+    if (getTargetElement(PAGE_CONTENT_TARGET)) {
         updateContent({
             url: window.location.href,
             target: PAGE_CONTENT_TARGET,

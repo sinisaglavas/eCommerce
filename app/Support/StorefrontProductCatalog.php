@@ -33,6 +33,40 @@ final class StorefrontProductCatalog
     /**
      * @return Collection<int, object>
      */
+    public function topBrands(int $limit = 4): Collection
+    {
+        return $this->products()
+            ->groupBy('brand')
+            ->map(fn (Collection $products, string $brand) => (object) [
+                'name' => $brand,
+                'productCount' => $products->count(),
+                'accent' => $products->first()->accent,
+            ])
+            ->sortByDesc('productCount')
+            ->take($limit)
+            ->values();
+    }
+
+    /**
+     * @return Collection<int, object>
+     */
+    public function deals(int $limit = 3): Collection
+    {
+        return $this->products()
+            ->filter(fn (object $product) => $product->oldPrice !== null)
+            ->map(function (object $product) {
+                $product->discountPercent = (int) round((1 - $product->price / $product->oldPrice) * 100);
+
+                return $product;
+            })
+            ->shuffle()
+            ->take($limit)
+            ->values();
+    }
+
+    /**
+     * @return Collection<int, object>
+     */
     public function search(string $query): Collection
     {
         $needle = Str::lower(trim($query));

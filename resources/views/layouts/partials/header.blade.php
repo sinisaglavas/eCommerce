@@ -76,11 +76,11 @@
       <div class="container">
         <ul class="nav">
           <li class="nav-item">
-            <a class="nav-link py-3 {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}#categories">
-              <svg class="ico"><use href="#i-grid"/></svg>All categories
+            <a class="nav-link py-3 {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}" data-ajax-link data-update-target="#page-content" data-category-nav data-category-slug="">
+              <svg class="ico"><use href="#i-home"/></svg>Home
             </a>
           </li>
-          @php($activeCategorySlug = request()->route('category') ?? (($category ?? null)?->slug))
+          @php($activeCategorySlug = request()->route('category') ?? (($category ?? null)?->slug) ?? '')
           @foreach ($categories as $navigationCategory)
             <li class="nav-item">
               <a class="nav-link py-3 {{ $activeCategorySlug === $navigationCategory->slug ? 'active' : '' }}" href="{{ route('categories.show', $navigationCategory->slug) }}" data-ajax-link data-update-target="#page-content" data-category-nav data-category-slug="{{ $navigationCategory->slug }}">
