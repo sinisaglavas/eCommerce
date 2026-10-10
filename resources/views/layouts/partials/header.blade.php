@@ -10,13 +10,16 @@
         </div>
 
         <div class="col-12 col-lg order-3 order-lg-2">
-          <form class="search-box d-flex align-items-center border rounded-3 ps-3 pe-1" role="search" onsubmit="return false">
-            <svg class="ico"><use href="#i-search"/></svg>
-            <input class="form-control border-0 bg-transparent" type="search" placeholder="Search laptops, phones, TVs...">
-            <button class="btn btn-primary fw-semibold px-3 my-1 d-inline-flex align-items-center gap-2" type="submit">
-              <svg class="ico"><use href="#i-search"/></svg><span class="d-none d-sm-inline">Search</span>
-            </button>
-          </form>
+          <div class="search-box-wrapper">
+            <form class="search-box d-flex align-items-center border rounded-3 ps-3 pe-1" role="search" action="{{ route('search') }}" data-search-form onsubmit="return false">
+              <svg class="ico"><use href="#i-search"/></svg>
+              <input class="form-control border-0 bg-transparent" type="search" name="q" placeholder="Search laptops, phones, TVs..." autocomplete="off" data-search-input>
+              <button class="search-submit-btn" type="submit" aria-label="Search">
+                <svg class="ico"><use href="#i-search"/></svg>
+              </button>
+            </form>
+            <div class="search-results-dropdown" data-search-results hidden></div>
+          </div>
         </div>
 
         <div class="col order-2 order-lg-3 d-flex justify-content-end align-items-center gap-2 gap-sm-3">

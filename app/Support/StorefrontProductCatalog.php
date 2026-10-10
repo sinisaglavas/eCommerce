@@ -33,6 +33,23 @@ final class StorefrontProductCatalog
     /**
      * @return Collection<int, object>
      */
+    public function search(string $query): Collection
+    {
+        $needle = Str::lower(trim($query));
+
+        if ($needle === '') {
+            return collect();
+        }
+
+        return $this->products()
+            ->filter(fn (object $product) => Str::contains(Str::lower($product->name), $needle)
+                || Str::contains(Str::lower($product->brand), $needle))
+            ->values();
+    }
+
+    /**
+     * @return Collection<int, object>
+     */
     private function products(): Collection
     {
         $images = [

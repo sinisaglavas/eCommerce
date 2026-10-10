@@ -1,1 +1,2 @@
 import './updateContent';
+import './search';
