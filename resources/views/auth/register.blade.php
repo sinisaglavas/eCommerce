@@ -5,7 +5,7 @@
 @section('description', 'Sve vaše kupovine na jednom mestu.')
 
 @section('content')
-<form method="POST" action="{{ url('/register') }}">
+<form method="POST" action="{{ route('register.store') }}">
     @csrf
     <div class="mb-3">
         <label for="name" class="form-label">Ime i prezime</label>
