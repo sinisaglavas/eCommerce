@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Support\StorefrontCatalog;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +21,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        View::composer(['layouts.partials.header', 'layouts.partials.footer'], function ($view): void {
+            $view->with('categories', app(StorefrontCatalog::class)->categories());
+        });
     }
 }
