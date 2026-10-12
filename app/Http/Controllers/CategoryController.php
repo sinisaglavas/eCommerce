@@ -48,7 +48,7 @@ class CategoryController extends Controller
         $paginatedProducts->appends($request->except('page'));
 
         $viewData = [
-            'title' => $selectedCategory->name.' – Voltix',
+            'title' => $selectedCategory->name.' – '.config('app.name'),
             'category' => $selectedCategory,
             'products' => $paginatedProducts,
             'filters' => $filters,

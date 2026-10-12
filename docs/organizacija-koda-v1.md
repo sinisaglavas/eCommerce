@@ -1,4 +1,4 @@
-# Organizacija koda — eCommerce v1.0
+# Organizacija koda — Voltio v1.0
 
 Ovaj dokument je zajedničko uputstvo za razvoj jednostavne Laravel eCommerce aplikacije koja se pokreće u Docker-u. Predlozi su polazna tačka, a ne opis trenutno implementiranog koda.
 

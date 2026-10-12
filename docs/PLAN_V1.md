@@ -1,4 +1,4 @@
-# eCommerce CV aplikacija — plan razvoja
+# Voltio — eCommerce CV aplikacija — plan razvoja
 
 ## Cilj
 

@@ -1,4 +1,4 @@
-# eCommerce
+# Voltio
 
 A Laravel application for reserving and purchasing products. Customers will be able to browse products by category, keep selected products in a shopping cart, and view their purchase history.
 

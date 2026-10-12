@@ -13,7 +13,7 @@ class HomeController extends Controller
     public function __invoke(Request $request, StorefrontCatalog $catalog, StorefrontProductCatalog $products): View|JsonResponse
     {
         $viewData = [
-            'title' => 'Voltix – Electronics Store',
+            'title' => config('app.name').' – Electronics Store',
             'categories' => $catalog->categories(),
             'deals' => $products->deals(3),
             'brands' => $products->topBrands(4),

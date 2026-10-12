@@ -5,7 +5,7 @@
         <div class="col-auto">
           <a href="{{ route('home') }}" class="d-flex align-items-center gap-2 fs-4 fw-800 text-body">
             <span class="logo-mark"><svg class="ico"><use href="#i-bolt"/></svg></span>
-            Volt<span class="text-primary">ix</span>
+            {{ config('app.name') }}
           </a>
         </div>
 

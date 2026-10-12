@@ -34,7 +34,7 @@ class CategoryPageTest extends TestCase
         $this->get('/products/aerobook-pro-14', ['X-Requested-With' => 'XMLHttpRequest'])
             ->assertOk()
             ->assertJsonPath('activeCategorySlug', 'laptops')
-            ->assertJsonPath('title', 'AeroBook Pro 14 – Voltix')
+            ->assertJsonPath('title', 'AeroBook Pro 14 – '.config('app.name'))
             ->assertJsonStructure(['html', 'title', 'activeCategorySlug']);
     }
 

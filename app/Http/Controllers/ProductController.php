@@ -28,7 +28,7 @@ class ProductController extends Controller
             ->values();
 
         $viewData = [
-            'title' => $selectedProduct->name.' – Voltix',
+            'title' => $selectedProduct->name.' – '.config('app.name'),
             'product' => $selectedProduct,
             'category' => $category,
             'relatedProducts' => $relatedProducts,

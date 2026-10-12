@@ -154,13 +154,13 @@ final class StorefrontProductCatalog
         $imagePositions = [];
 
         return collect([
-            (object) ['name' => 'AeroBook Pro 14', 'categorySlug' => 'laptops', 'brand' => 'Voltix', 'price' => 1_299, 'oldPrice' => null, 'icon' => 'laptop', 'accent' => 'c-blue', 'tag' => 'bestseller'],
+            (object) ['name' => 'AeroBook Pro 14', 'categorySlug' => 'laptops', 'brand' => 'Voltio', 'price' => 1_299, 'oldPrice' => null, 'icon' => 'laptop', 'accent' => 'c-blue', 'tag' => 'bestseller'],
             (object) ['name' => 'NovaBook Air 13', 'categorySlug' => 'laptops', 'brand' => 'Nova', 'price' => 899, 'oldPrice' => 999, 'icon' => 'laptop', 'accent' => 'c-blue'],
             (object) ['name' => 'Titan X16', 'categorySlug' => 'laptops', 'brand' => 'Titan', 'price' => 1_749, 'oldPrice' => null, 'icon' => 'laptop', 'accent' => 'c-blue'],
             (object) ['name' => 'ZenBook 15', 'categorySlug' => 'laptops', 'brand' => 'Zen', 'price' => 1_159, 'oldPrice' => 1_299, 'icon' => 'laptop', 'accent' => 'c-blue'],
             (object) ['name' => 'CoreLite 14', 'categorySlug' => 'laptops', 'brand' => 'Core', 'price' => 729, 'oldPrice' => null, 'icon' => 'laptop', 'accent' => 'c-blue'],
             (object) ['name' => 'Raptor G17', 'categorySlug' => 'laptops', 'brand' => 'Raptor', 'price' => 1_999, 'oldPrice' => null, 'icon' => 'laptop', 'accent' => 'c-blue'],
-            (object) ['name' => 'AeroBook Pro 16', 'categorySlug' => 'laptops', 'brand' => 'Voltix', 'price' => 1_499, 'oldPrice' => null, 'icon' => 'laptop', 'accent' => 'c-blue'],
+            (object) ['name' => 'AeroBook Pro 16', 'categorySlug' => 'laptops', 'brand' => 'Voltio', 'price' => 1_499, 'oldPrice' => null, 'icon' => 'laptop', 'accent' => 'c-blue'],
             (object) ['name' => 'NovaBook Ultra 14', 'categorySlug' => 'laptops', 'brand' => 'Nova', 'price' => 1_099, 'oldPrice' => 1_249, 'icon' => 'laptop', 'accent' => 'c-blue'],
             (object) ['name' => 'Titan X18 Pro', 'categorySlug' => 'laptops', 'brand' => 'Titan', 'price' => 2_199, 'oldPrice' => null, 'icon' => 'laptop', 'accent' => 'c-blue'],
             (object) ['name' => 'ZenBook Flip 14', 'categorySlug' => 'laptops', 'brand' => 'Zen', 'price' => 1_049, 'oldPrice' => null, 'icon' => 'laptop', 'accent' => 'c-blue'],

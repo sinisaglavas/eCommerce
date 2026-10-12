@@ -4,7 +4,7 @@
         <div class="col-lg-5">
           <a href="{{ route('home') }}" class="d-inline-flex align-items-center gap-2 fs-5 fw-800 text-body">
             <span class="logo-mark"><svg class="ico"><use href="#i-bolt"/></svg></span>
-            Volt<span class="text-primary">ix</span>
+            {{ config('app.name') }}
           </a>
           <p class="text-secondary small mt-2 mb-2" style="max-width:300px">Your online electronics store. Quality-checked gear, fast delivery and support you can trust.</p>
           <div class="d-flex gap-2">
@@ -43,7 +43,7 @@
     </div>
     <div class="border-top">
       <div class="container py-2 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 small text-secondary">
-        <span>© 2026 Voltix. All rights reserved.</span>
+        <span>© {{ date('Y') }} {{ config('app.name') }}. All rights reserved.</span>
         <div class="d-flex flex-wrap gap-2">
           <span class="pay"><svg class="ico"><use href="#i-lock"/></svg> Secure checkout</span>
           <span class="pay"><svg class="ico"><use href="#i-card"/></svg> Visa</span>
