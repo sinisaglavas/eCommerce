@@ -62,11 +62,40 @@
             <svg class="ico"><use href="#i-cart"/></svg>
             <span class="count">2</span>
           </a>
-          <a href="#" class="user-chip d-none d-md-flex align-items-center gap-2">
-            <span class="avatar"><svg class="ico"><use href="#i-user"/></svg></span>
-            <span class="lh-sm"><span class="d-block small text-secondary">Hello,</span><span class="d-block small fw-semibold">Sign in</span></span>
-          </a>
-          <a href="#" class="hbtn d-md-none" title="Account"><svg class="ico"><use href="#i-user"/></svg></a>
+          @auth
+            <div class="dropdown">
+              <button class="user-chip dropdown-toggle d-flex align-items-center gap-2 bg-transparent text-start" type="button"
+                      id="account-menu" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="avatar" aria-hidden="true"><svg class="ico"><use href="#i-user"/></svg></span>
+                <span class="lh-sm"><span class="d-block small text-secondary">Hello,</span>
+                    <span class="d-block small fw-semibold text-break">{{ auth()->user()->name }}</span>
+                </span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end mt-2" aria-labelledby="account-menu">
+                <li>
+                  @if (Route::has('orders.index'))
+                    <a class="dropdown-item" href="{{ route('orders.index') }}">My orders</a>
+                  @else
+                    <span class="dropdown-item disabled" aria-disabled="true">My orders</span>
+                  @endif
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="dropdown-item">Sign out</button>
+                  </form>
+                </li>
+              </ul>
+            </div>
+          @else
+            <a href="{{ route('login') }}" class="user-chip d-flex align-items-center gap-2">
+              <span class="avatar" aria-hidden="true"><svg class="ico"><use href="#i-user"/></svg></span>
+                <span class="lh-sm"><span class="d-block small text-secondary">Hello,</span>
+                    <span class="small fw-semibold">SignIn</span>
+                </span>
+            </a>
+          @endauth
         </div>
       </div>
     </div>
