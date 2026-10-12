@@ -28,7 +28,7 @@ Storefront funkcionalnost je implementirana na grani `feature/ecommerce-v1`. Apl
 - Početna stranica sada podržava isti AJAX obrazac kao kategorije/proizvodi (`HomeController` vraća JSON kad je zahtjev AJAX, sadržaj je izdvojen u `home/partials/page-content.blade.php`).
 - Hero sekcija prikazuje stvarni "Deal of the day" izračunat iz kataloga (`StorefrontProductCatalog::deals()`) — glavna kartica i dvije sporedne kartice se biraju nasumično (shuffle) prilikom svakog učitavanja, sa pravim slikama, cijenama i procentom popusta; sve tri kartice vode na stranicu proizvoda.
 - Overlay/kontrast teksta preko fotografija u hero kartama je pojačan (tamniji gradient + text-shadow) da tekst ostane čitljiv bez obzira koja se nasumična slika pojavi.
-- "Featured" sekcija (3 kartice) sada vodi na stvarne kategorije (Laptops, Audio, Gaming) umjesto na nepostojeće "#" linkove; kartica "Smart home" (nepostojeća kategorija) zamijenjena je sa "Audio essentials".
+- "Featured" sekcija (3 kartice) sada vodi na stvarne kategorije (Laptops, Tablets, Smartwatches) umjesto na nepostojeće "#" linkove; kartica "Smart home" (nepostojeća kategorija) zamijenjena je sa "Tablets for every day".
 - "Popular brands" prikazuje 4 stvarna brenda izračunata iz kataloga (`StorefrontProductCatalog::topBrands()`, grupisano po broju proizvoda), sa stilizovanim "logo mark" inicijalom umjesto lažnih placeholder tekstova.
 - Uklonjena newsletter sekcija ("Be the first to hear about deals...") sa početne stranice.
 - Top bar iznad headera ("Free shipping...", Stores/Track order/Help) je uklonjen.
@@ -58,7 +58,8 @@ Zajednički `resources/js/updateContent.js` prima URL i ciljni selektor (primjer
 ## Preostalo za verziju 1.0
 
 - Registracija, prijava i odjava korisnika
-- Baza, modeli, migracije i administratorsko upravljanje katalogom
+- Katalog migracije su kreirane za `categories`, `brands`, `products`, `product_images` i zasebne 1:1 specifikacione tabele za Laptop, Smartphone, TV, Monitor, Tablet i Smartwatch. Potrebno ih je izvršiti, dodati modele/seedere i povezati storefront sa bazom.
+- Administratorsko upravljanje katalogom
 - Korpa i kreiranje kupovine/narudžbe
 - Pregled "Moje kupovine"
 - Admin panel

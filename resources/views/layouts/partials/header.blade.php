@@ -44,11 +44,11 @@
               </a>
               <a href="#" class="notif-item unread c-pink">
                 <span class="notif-icon"><svg class="ico"><use href="#i-heart"/></svg></span>
-                <span><span class="d-block small fw-semibold">Back in stock: wireless headphones</span><span class="d-block small text-secondary">Limited quantity · 3 h ago</span></span>
+                <span><span class="d-block small fw-semibold">Back in stock: Nova Tab Pro 12</span><span class="d-block small text-secondary">Limited quantity · 3 h ago</span></span>
               </a>
               <a href="#" class="notif-item unread c-violet">
                 <span class="notif-icon"><svg class="ico"><use href="#i-sparkle"/></svg></span>
-                <span><span class="d-block small fw-semibold">New gaming laptops just arrived</span><span class="d-block small text-secondary">Check them out · Yesterday</span></span>
+                <span><span class="d-block small fw-semibold">New smartwatches just arrived</span><span class="d-block small text-secondary">Check them out · Yesterday</span></span>
               </a>
               <a href="#" class="d-block text-center small text-primary fw-semibold py-3">View all notifications</a>
             </div>

@@ -27,7 +27,7 @@
         <div class="col-lg-7">
           <div class="product-summary">
             <div class="d-flex align-items-center justify-content-between gap-3 mb-3">
-              <span class="product-brand">{{ $product->brand }}</span>
+              <span class="product-brand">{{ $product->brand->name }}</span>
               <span class="product-stock"><svg class="ico"><use href="#i-shield"/></svg>In stock</span>
             </div>
 

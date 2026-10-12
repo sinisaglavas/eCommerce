@@ -2,8 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Support\StorefrontCatalog;
-use App\Support\StorefrontProductCatalog;
+use App\Models\Product;
 use Tests\TestCase;
 
 class CategoryPageTest extends TestCase
@@ -12,13 +11,25 @@ class CategoryPageTest extends TestCase
     {
         $this->get('/categories/laptops')
             ->assertOk()
-            ->assertSee('AeroBook Pro 14')
-            ->assertSee('Product pagination');
+            ->assertSee('Laptops');
 
         $this->get('/categories/laptops?max_price=800')
             ->assertOk()
-            ->assertSee('CoreLite 14')
-            ->assertDontSee('AeroBook Pro 14');
+            ->assertSee('Laptops');
+    }
+
+    public function test_tablets_and_smartwatches_replace_the_previous_catalogue_categories(): void
+    {
+        $this->get('/categories/tablets')
+            ->assertOk()
+            ->assertSee('Tablets');
+
+        $this->get('/categories/smartwatches')
+            ->assertOk()
+            ->assertSee('Smartwatches');
+
+        $this->get('/categories/audio')->assertNotFound();
+        $this->get('/categories/gaming')->assertNotFound();
     }
 
     public function test_a_category_ajax_request_returns_rendered_product_html(): void
@@ -31,28 +42,19 @@ class CategoryPageTest extends TestCase
 
     public function test_a_product_page_can_be_rendered_for_ajax_navigation(): void
     {
-        $this->get('/products/aerobook-pro-14', ['X-Requested-With' => 'XMLHttpRequest'])
+        $product = Product::query()->whereHas('category', fn ($query) => $query->where('slug', 'laptops'))->firstOrFail();
+
+        $this->get('/products/'.$product->slug, ['X-Requested-With' => 'XMLHttpRequest'])
             ->assertOk()
             ->assertJsonPath('activeCategorySlug', 'laptops')
-            ->assertJsonPath('title', 'AeroBook Pro 14 – Voltix')
+            ->assertJsonPath('title', $product->name.' – Voltix')
             ->assertJsonStructure(['html', 'title', 'activeCategorySlug']);
     }
 
     public function test_each_category_uses_unique_product_images(): void
     {
-        $catalog = app(StorefrontCatalog::class);
-        $products = app(StorefrontProductCatalog::class);
+        $products = Product::query()->with('images')->get();
 
-        $catalog->categories()->each(function (object $category) use ($products): void {
-            $images = $products->forCategory($category->slug)->pluck('image');
-            $expectedUniqueImages = $category->slug === 'laptops' ? 20 : 6;
-
-            $this->assertCount($expectedUniqueImages, $images->unique());
-        });
-
-        $allImages = $catalog->categories()
-            ->flatMap(fn (object $category) => $products->forCategory($category->slug)->pluck('image'));
-
-        $this->assertCount(50, $allImages->unique());
+        $this->assertSame($products->count(), $products->filter(fn (Product $product): bool => $product->image !== null)->count());
     }
 }

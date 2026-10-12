@@ -50,11 +50,16 @@ Za početak su dovoljni:
 
 - `User` — korisnik i njegove porudžbine.
 - `Category` — kategorija proizvoda.
-- `Product` — proizvod, cena i pripadnost kategoriji.
+- `Brand` — brend koji može imati proizvode u više kategorija.
+- `Product` — zajednički podaci proizvoda, cena i pripadnost jednoj kategoriji.
+- `ProductImage` — uređena galerija slika proizvoda.
+- `LaptopDetail`, `SmartphoneDetail`, `TelevisionDetail`, `MonitorDetail`, `TabletDetail` i `SmartwatchDetail` — 1:1 tehničke specifikacije proizvoda, zavisno od kategorije.
 - `Order` — porudžbina korisnika.
 - `OrderItem` — pojedinačna stavka porudžbine.
 
 Ako proizvod pripada jednoj kategoriji, dovoljan je `category_id` na proizvodu. Ne uvoditi vezu sa više kategorija dok ne postoji takav zahtev.
+
+Katalog koristi šest kategorija: Laptops, Smartphones, TVs, Monitors, Tablets i Smartwatches. Zajednički podaci ostaju u `products`, dok svaka od njih ima zasebnu tabelu sa tipiziranim tehničkim atributima i jedinstvenim `product_id`. Time se izbegava jedna velika tabela sa mnogo nepovezanih i praznih kolona.
 
 Porudžbina pripada korisniku i ima više stavki. Stavka treba da sačuva naziv proizvoda i jediničnu cenu u trenutku kupovine, kao i količinu. Kasnije izmene proizvoda ne smeju da promene istoriju kupovine.
 

@@ -28,7 +28,7 @@
                 <a href="{{ route('products.show', $deal->slug) }}" class="promo deal-card {{ $deal->accent }} text-white p-4 d-flex flex-column justify-content-end h-100" data-ajax-link data-update-target="#page-content">
                   <img class="deal-card-image" src="{{ $deal->image }}" alt="{{ $deal->name }}">
                   <span class="promo-badge">-{{ $deal->discountPercent }}%</span>
-                  <small class="text-uppercase fw-semibold opacity-75">{{ $deal->brand }}</small>
+                  <small class="text-uppercase fw-semibold opacity-75">{{ $deal->brand->name }}</small>
                   <strong class="fs-4 lh-sm">{{ $deal->name }}</strong>
                   <span class="small opacity-75 mt-1">Now €{{ number_format($deal->price, 0, ',', '.') }}</span>
                 </a>
@@ -44,7 +44,7 @@
           <svg class="ico" style="color:#fbbf24"><use href="#i-sparkle"/></svg> New collection 2026
         </span>
         <h1 class="fw-bold mb-3" style="max-width:520px">Technology that keeps up with you</h1>
-        <p class="fs-5 mb-4" style="color:#cbd5e1; max-width:440px">The latest laptops, phones and gaming gear at the best prices. Up to 24 interest-free installments.</p>
+        <p class="fs-5 mb-4" style="color:#cbd5e1; max-width:440px">The latest laptops, phones, tablets and smartwatches at the best prices. Up to 24 interest-free installments.</p>
         <a href="#categories" class="btn btn-light btn-lg fw-semibold align-self-start rounded-3 px-4 d-inline-flex align-items-center gap-2">
           Browse categories <svg class="ico"><use href="#i-arrow"/></svg>
         </a>
@@ -102,7 +102,7 @@
             @endif
             <div class="category-icon mb-3"><svg class="ico"><use href="#i-{{ $category->icon }}"/></svg></div>
             <h3 class="fs-6 fw-semibold mb-0">{{ $category->name }}</h3>
-            <small class="text-secondary">{{ $category->productCount }} products</small>
+            <small class="text-secondary">{{ $category->products_count }} products</small>
             <span class="arrow mt-2"><svg class="ico"><use href="#i-arrow"/></svg></span>
           </a>
         </div>
@@ -134,25 +134,25 @@
         </a>
       </div>
       <div class="col-md-4">
-        <a href="{{ route('categories.show', 'audio') }}" class="feature-card f2 text-white p-4 d-flex flex-column justify-content-between h-100" data-ajax-link data-update-target="#page-content">
+        <a href="{{ route('categories.show', 'tablets') }}" class="feature-card f2 text-white p-4 d-flex flex-column justify-content-between h-100" data-ajax-link data-update-target="#page-content">
           <div>
-            <span class="chip"><svg class="ico"><use href="#i-headphones"/></svg></span>
-            <h3 class="fw-bold fs-4">Audio essentials</h3>
-            <p class="opacity-75 small mb-0" style="max-width:200px">Headphones and speakers for every moment</p>
+            <span class="chip"><svg class="ico"><use href="#i-tablet"/></svg></span>
+            <h3 class="fw-bold fs-4">Tablets for every day</h3>
+            <p class="opacity-75 small mb-0" style="max-width:200px">Portable power for work, study and entertainment</p>
           </div>
           <span class="go align-self-start rounded-3 px-3 py-2 small fw-semibold mt-3">Explore <svg class="ico"><use href="#i-arrow"/></svg></span>
-          <span class="art"><svg class="ico"><use href="#i-headphones"/></svg></span>
+          <span class="art"><svg class="ico"><use href="#i-tablet"/></svg></span>
         </a>
       </div>
       <div class="col-md-4">
-        <a href="{{ route('categories.show', 'gaming') }}" class="feature-card f3 text-white p-4 d-flex flex-column justify-content-between h-100" data-ajax-link data-update-target="#page-content">
+        <a href="{{ route('categories.show', 'smartwatches') }}" class="feature-card f3 text-white p-4 d-flex flex-column justify-content-between h-100" data-ajax-link data-update-target="#page-content">
           <div>
-            <span class="chip"><svg class="ico"><use href="#i-gamepad"/></svg></span>
-            <h3 class="fw-bold fs-4">Gaming setup</h3>
-            <p class="opacity-75 small mb-0" style="max-width:200px">Everything for the ultimate gaming experience</p>
+            <span class="chip"><svg class="ico"><use href="#i-watch"/></svg></span>
+            <h3 class="fw-bold fs-4">Smartwatches for life</h3>
+            <p class="opacity-75 small mb-0" style="max-width:200px">Stay connected and keep your health on track</p>
           </div>
           <span class="go align-self-start rounded-3 px-3 py-2 small fw-semibold mt-3">Explore <svg class="ico"><use href="#i-arrow"/></svg></span>
-          <span class="art"><svg class="ico"><use href="#i-gamepad"/></svg></span>
+          <span class="art"><svg class="ico"><use href="#i-watch"/></svg></span>
         </a>
       </div>
     </div>
@@ -172,11 +172,11 @@
     <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-3">
       @foreach ($brands as $brand)
         <div class="col">
-          <a href="#" class="brand-card {{ $brand->accent }} bg-surface border rounded-4 p-4 d-flex align-items-center gap-3">
+          <a href="#" class="brand-card c-blue bg-surface border rounded-4 p-4 d-flex align-items-center gap-3">
             <span class="brand-mark">{{ Str::upper(Str::substr($brand->name, 0, 1)) }}</span>
             <span>
               <span class="d-block fw-bold">{{ $brand->name }}</span>
-              <span class="d-block text-secondary small">{{ $brand->productCount }} {{ Str::plural('product', $brand->productCount) }}</span>
+              <span class="d-block text-secondary small">{{ $brand->products_count }} {{ Str::plural('product', $brand->products_count) }}</span>
             </span>
           </a>
         </div>

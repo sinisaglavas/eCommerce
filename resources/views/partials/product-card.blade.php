@@ -18,7 +18,7 @@
     <img src="{{ $product->image }}" alt="{{ $product->name }}" loading="lazy">
   </div>
   <div class="card-body d-flex flex-column p-4">
-    <p class="text-secondary small mb-2">{{ $product->brand }}</p>
+    <p class="text-secondary small mb-2">{{ $product->brand->name }}</p>
     <h2 class="h5 fw-semibold">{{ $product->name }}</h2>
     <div class="mt-auto pt-3 d-flex justify-content-between align-items-center gap-3">
       <div>
