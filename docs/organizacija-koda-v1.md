@@ -13,7 +13,7 @@ Ovaj dokument je zajedničko uputstvo za razvoj jednostavne Laravel eCommerce ap
 
 Prema opisu korisnika, kreirana je početna stranica sa kategorijama i proizvodima, filtriranje po ceni, paginacija i stranica pojedinačnog proizvoda. Promena kategorije kroz navigaciju radi preko JavaScript-a, bez osvežavanja cele stranice.
 
-Taj rad još nije pushovan i nije dostupan u trenutnom lokalnom kodu. Lokalna implementacija nije proverena kao deo ovog dogovora.
+Katalog je sada povezan sa bazom: postoje kategorije, brendovi, proizvodi, slike i zasebne tabele tehničkih specifikacija. Wishlist je trajna lista po korisniku, dok je korpa namerno ostavljena u sesiji.
 
 **v1.0 obuhvata:**
 
@@ -36,6 +36,7 @@ Logiku izdvajati kada postane složena ili se ponavlja, a ne unapred.
 | Funkcionalnost | Predloženi kontroler | Odgovornost |
 | --- | --- | --- |
 | Katalog | `ProductController` | Lista, kategorija, cena, paginacija i detalji proizvoda |
+| Wishlist | `WishlistController` | Prikaz liste i AJAX dodavanje/uklanjanje sačuvanog proizvoda |
 | Korpa | `CartController` | Prikaz, dodavanje, promena količine i uklanjanje |
 | Kupovine | `OrderController` | Kreiranje porudžbine i prikaz sopstvenih kupovina |
 | Admin proizvodi | `Admin/ProductController` | Upravljanje proizvodima |
@@ -54,6 +55,7 @@ Za početak su dovoljni:
 - `Product` — zajednički podaci proizvoda, cena i pripadnost jednoj kategoriji.
 - `ProductImage` — uređena galerija slika proizvoda.
 - `LaptopDetail`, `SmartphoneDetail`, `TelevisionDetail`, `MonitorDetail`, `TabletDetail` i `SmartwatchDetail` — 1:1 tehničke specifikacije proizvoda, zavisno od kategorije.
+- `Wishlist` — trajno sačuvan proizvod korisnika; kombinacija `user_id` i `product_id` mora biti jedinstvena.
 - `Order` — porudžbina korisnika.
 - `OrderItem` — pojedinačna stavka porudžbine.
 
@@ -68,6 +70,8 @@ Porudžbina pripada korisniku i ima više stavki. Stavka treba da sačuva naziv 
 Korpa i porudžbina su različite stvari.
 
 Za jednostavnu v1.0 korpu je moguće držati u sesiji, sa ID-em proizvoda i količinom. Trajna korpa u bazi nije potrebna dok ne postoji zahtev, na primer za deljenje korpe između uređaja.
+
+Wishlist je odvojena od korpe i čuva se u bazi za prijavljenog korisnika. Dodavanje i uklanjanje može biti AJAX zahtev, ali server mora proveriti prijavljenog korisnika i sprečiti duplikate jedinstvenim ograničenjem baze.
 
 Kada korisnik potvrdi kupovinu, server proverava proizvode, količine, aktuelne cene i dostupnost, pa kreira `Order` i njegove `OrderItem` stavke. Ne oslanjati se na cenu ili ukupan iznos koji pošalje JavaScript.
 

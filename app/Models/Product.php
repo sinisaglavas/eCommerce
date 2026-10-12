@@ -40,6 +40,11 @@ class Product extends Model
         return $this->hasMany(ProductImage::class)->orderBy('sort_order');
     }
 
+    public function wishlistedBy(): HasMany
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
     public function laptopDetail(): HasOne
     {
         return $this->hasOne(LaptopDetail::class);

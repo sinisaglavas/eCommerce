@@ -50,7 +50,19 @@
               <span class="product-benefit"><svg class="ico"><use href="#i-shield"/></svg>2-year warranty</span>
             </div>
 
-            <button class="btn btn-primary btn-lg fw-semibold px-4" type="button">Add to cart</button>
+            <div class="d-flex flex-wrap gap-2">
+              <button class="btn btn-primary btn-lg fw-semibold px-4" type="button">Add to cart</button>
+              @auth
+                <button class="btn btn-outline-light btn-lg fw-semibold px-4" type="button" data-wishlist-button data-wishlist-url="{{ route('wishlists.toggle', $product) }}" data-wishlisted="{{ $isWishlisted ? 'true' : 'false' }}">
+                  <svg class="ico"><use href="#i-heart"/></svg>
+                  <span data-wishlist-label>{{ $isWishlisted ? 'Remove from wishlist' : 'Add to wishlist' }}</span>
+                </button>
+              @else
+                <a class="btn btn-outline-light btn-lg fw-semibold px-4" href="{{ route('login') }}">
+                  <svg class="ico"><use href="#i-heart"/></svg> Add to wishlist
+                </a>
+              @endauth
+            </div>
           </div>
         </div>
       </div>
