@@ -50,4 +50,9 @@ class CartService
     {
         return array_sum($this->quantities($session));
     }
+
+    public function clear(Session $session): void
+    {
+        $session->forget(self::SessionKey);
+    }
 }
