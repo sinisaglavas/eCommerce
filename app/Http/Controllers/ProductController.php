@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Wishlist;
+use App\Services\CartService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -13,6 +14,7 @@ class ProductController extends Controller
     public function show(
         Request $request,
         string $product,
+        CartService $cartService,
     ): View|JsonResponse {
         $selectedProduct = Product::active()->with(['category', 'laptopDetail', 'smartphoneDetail', 'televisionDetail', 'monitorDetail', 'tabletDetail', 'smartwatchDetail'])->where('slug', $product)->firstOrFail();
         $category = $selectedProduct->category;
@@ -25,6 +27,7 @@ class ProductController extends Controller
             'category' => $category,
             'relatedProducts' => $relatedProducts,
             'isWishlisted' => $isWishlisted,
+            'isInCart' => array_key_exists($selectedProduct->id, $cartService->quantities($request->session())),
         ];
 
         if ($request->ajax()) {

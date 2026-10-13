@@ -60,9 +60,34 @@
               <svg class="ico"><use href="#i-heart"/></svg>
             </a>
           @endauth
-          <a href="#" class="hbtn" title="Cart">
-            <svg class="ico"><use href="#i-cart"/></svg>
-          </a>
+          <div class="dropdown">
+            <button class="hbtn" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" title="Cart">
+              <svg class="ico"><use href="#i-cart"/></svg>
+              @if ($cartCount > 0)
+                <span class="count" data-cart-badge>{{ $cartCount }}</span>
+              @endif
+            </button>
+            <div class="dropdown-menu dropdown-menu-end notif-menu mt-2">
+              <div class="d-flex justify-content-between align-items-center px-3 py-3 border-bottom">
+                <strong>Cart</strong>
+                <span class="small text-secondary"><span data-cart-item-count>{{ $cartCount }}</span> items</span>
+              </div>
+              <div data-cart-dropdown-list>
+                @forelse ($cartItems as $cartItem)
+                  <div class="notif-item c-blue" data-cart-dropdown-item data-product-id="{{ $cartItem->id }}">
+                    <a href="{{ route('products.show', $cartItem->slug) }}" class="d-flex align-items-center gap-2 text-decoration-none flex-grow-1">
+                      <span class="notif-icon overflow-hidden"><img src="{{ $cartItem->image }}" alt="" class="w-100 h-100 object-fit-cover"></span>
+                      <span><span class="d-block small fw-semibold">{{ $cartItem->name }}</span><span class="d-block small text-secondary">€{{ number_format($cartItem->price, 0, ',', '.') }}</span></span>
+                    </a>
+                    <button type="button" class="wishlist-remove-btn" data-cart-remove data-cart-remove-url="{{ route('cart.destroy', $cartItem) }}" data-product-id="{{ $cartItem->id }}" aria-label="Remove {{ $cartItem->name }} from cart">×</button>
+                  </div>
+                @empty
+                  <p class="small text-secondary text-center px-3 py-4 mb-0" data-cart-empty>Your cart is empty.</p>
+                @endforelse
+              </div>
+              <a href="{{ route('cart.index') }}" class="d-block text-center small text-primary fw-semibold py-3">See all</a>
+            </div>
+          </div>
           @auth
             <div class="dropdown">
               <button class="user-chip dropdown-toggle d-flex align-items-center gap-2 bg-transparent text-start" type="button"
