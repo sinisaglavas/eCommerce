@@ -79,6 +79,11 @@
                     <span class="dropdown-item disabled" aria-disabled="true">My orders</span>
                   @endif
                 </li>
+                @if (auth()->user()->is_admin)
+                  <li>
+                    <a class="dropdown-item" href="{{ route('admin.dashboard') }}">Admin panel</a>
+                  </li>
+                @endif
                 <li><hr class="dropdown-divider"></li>
                 <li>
                   <form method="POST" action="{{ route('logout') }}">

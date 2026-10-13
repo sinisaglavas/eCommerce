@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SearchController;
@@ -17,6 +20,12 @@ Route::prefix('admin')
     ->middleware(['auth', EnsureUserIsAdmin::class])
     ->group(function () {
         Route::view('/', 'admin.dashboard')->name('dashboard');
+        Route::get('/categories', [AdminCategoryController::class, 'index'])->name('categories');
+        Route::get('/products', [AdminProductController::class, 'index'])->name('products');
+        Route::get('/products/create', [AdminProductController::class, 'create'])->name('products.create');
+        Route::get('/products/{product}/edit', [AdminProductController::class, 'edit'])->name('products.edit');
+        Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders');
+        Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
 
         // Rute za kategorije proizvode i porudžbine.
     });

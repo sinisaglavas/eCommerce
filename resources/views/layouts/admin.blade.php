@@ -27,6 +27,8 @@
         .stat-value { font-size: 2rem; font-weight: 700; }
         .btn-primary { --bs-btn-bg: #387ff5; --bs-btn-border-color: #387ff5; --bs-btn-hover-bg: #286ce0; --bs-btn-hover-border-color: #286ce0; }
         .btn-outline-secondary { --bs-btn-color: #aab8ce; --bs-btn-border-color: #34435b; --bs-btn-hover-bg: #233047; }
+        .admin-table { --bs-table-bg: #111827; --bs-table-border-color: #233047; --bs-table-hover-bg: #19243a; }
+        .product-thumbnail { width: 52px; height: 52px; object-fit: cover; border-radius: 8px; }
         .empty-symbol { color: #79acff; font-size: 2rem; }
         a { text-underline-offset: 4px; }
         a:focus-visible, button:focus-visible { outline: 2px solid #79acff; outline-offset: 4px; }
@@ -51,9 +53,9 @@
             <nav class="admin-nav nav flex-column gap-1" aria-label="Upravljanje prodavnicom">
                 @foreach ([
                     ['route' => 'admin.dashboard', 'pattern' => 'admin.dashboard', 'label' => 'Dashboard', 'icon' => '▦'],
-                    ['route' => 'admin.categories.index', 'pattern' => 'admin.categories.*', 'label' => 'Kategorije', 'icon' => '▤'],
-                    ['route' => 'admin.products.index', 'pattern' => 'admin.products.*', 'label' => 'Proizvodi', 'icon' => '◇'],
-                    ['route' => 'admin.orders.index', 'pattern' => 'admin.orders.*', 'label' => 'Porudžbine', 'icon' => '▧'],
+                    ['route' => 'admin.categories', 'pattern' => 'admin.categories', 'label' => 'Kategorije', 'icon' => '▤'],
+                    ['route' => 'admin.products', 'pattern' => 'admin.products*', 'label' => 'Proizvodi', 'icon' => '◇'],
+                    ['route' => 'admin.orders', 'pattern' => 'admin.orders*', 'label' => 'Porudžbine', 'icon' => '▧'],
                 ] as $item)
                     @if (Route::has($item['route']))
                         <a href="{{ route($item['route']) }}" class="nav-link {{ request()->routeIs($item['pattern']) ? 'active' : '' }}" @if(request()->routeIs($item['pattern'])) aria-current="page" @endif>
