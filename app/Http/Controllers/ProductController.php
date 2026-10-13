@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Support\StorefrontCatalog;
-use App\Support\StorefrontProductCatalog;
+use App\Models\Product;
+use App\Models\Wishlist;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -13,25 +13,18 @@ class ProductController extends Controller
     public function show(
         Request $request,
         string $product,
-        StorefrontCatalog $catalog,
-        StorefrontProductCatalog $products,
     ): View|JsonResponse {
-        $selectedProduct = $products->findBySlug($product);
-
-        abort_unless($selectedProduct, 404);
-
-        $category = $catalog->categories()->firstWhere('slug', $selectedProduct->categorySlug);
-
-        $relatedProducts = $products->forCategory($selectedProduct->categorySlug)
-            ->reject(fn (object $relatedProduct) => $relatedProduct->slug === $selectedProduct->slug)
-            ->take(4)
-            ->values();
+        $selectedProduct = Product::active()->with(['category', 'laptopDetail', 'smartphoneDetail', 'televisionDetail', 'monitorDetail', 'tabletDetail', 'smartwatchDetail'])->where('slug', $product)->firstOrFail();
+        $category = $selectedProduct->category;
+        $isWishlisted = $request->user() !== null && Wishlist::query()->whereBelongsTo($request->user())->whereBelongsTo($selectedProduct)->exists();
+        $relatedProducts = Product::active()->whereBelongsTo($category)->whereKeyNot($selectedProduct)->with('category')->limit(4)->get();
 
         $viewData = [
             'title' => $selectedProduct->name.' – '.config('app.name'),
             'product' => $selectedProduct,
             'category' => $category,
             'relatedProducts' => $relatedProducts,
+            'isWishlisted' => $isWishlisted,
         ];
 
         if ($request->ajax()) {

@@ -44,20 +44,49 @@
               </a>
               <a href="#" class="notif-item unread c-pink">
                 <span class="notif-icon"><svg class="ico"><use href="#i-heart"/></svg></span>
-                <span><span class="d-block small fw-semibold">Back in stock: wireless headphones</span><span class="d-block small text-secondary">Limited quantity · 3 h ago</span></span>
+                <span><span class="d-block small fw-semibold">Back in stock: Nova Tab Pro 12</span><span class="d-block small text-secondary">Limited quantity · 3 h ago</span></span>
               </a>
               <a href="#" class="notif-item unread c-violet">
                 <span class="notif-icon"><svg class="ico"><use href="#i-sparkle"/></svg></span>
-                <span><span class="d-block small fw-semibold">New gaming laptops just arrived</span><span class="d-block small text-secondary">Check them out · Yesterday</span></span>
+                <span><span class="d-block small fw-semibold">New smartwatches just arrived</span><span class="d-block small text-secondary">Check them out · Yesterday</span></span>
               </a>
               <a href="#" class="d-block text-center small text-primary fw-semibold py-3">View all notifications</a>
             </div>
           </div>
 
-          <a href="#" class="hbtn" title="Wishlist">
-            <svg class="ico"><use href="#i-heart"/></svg>
-            <span class="count pink">3</span>
-          </a>
+          @auth
+            <div class="dropdown">
+              <button class="hbtn" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" title="Wishlist">
+                <svg class="ico"><use href="#i-heart"/></svg>
+                <span class="count pink" data-wishlist-count>{{ $wishlistCount }}</span>
+              </button>
+              <div class="dropdown-menu dropdown-menu-end notif-menu mt-2">
+                <div class="d-flex justify-content-between align-items-center px-3 py-3 border-bottom">
+                  <strong>Wishlist</strong>
+                  <span class="small text-secondary"><span data-wishlist-count>{{ $wishlistCount }}</span> saved</span>
+                </div>
+                <div data-wishlist-dropdown-list>
+                @forelse ($wishlistItems as $wishlistItem)
+                  <a href="{{ route('products.show', $wishlistItem->product->slug) }}" class="notif-item c-pink" data-wishlist-dropdown-item data-product-id="{{ $wishlistItem->product->id }}">
+                    <span class="notif-icon overflow-hidden"><img src="{{ $wishlistItem->product->image }}" alt="" class="w-100 h-100 object-fit-cover"></span>
+                    <span>
+                      <span class="d-block small fw-semibold">{{ $wishlistItem->product->name }}</span>
+                      <span class="d-block small text-secondary">€{{ number_format($wishlistItem->product->price, 0, ',', '.') }}</span>
+                    </span>
+                  </a>
+                @empty
+                  <p class="small text-secondary text-center px-3 py-4 mb-0" data-wishlist-empty>Your wishlist is empty.</p>
+                @endforelse
+                </div>
+                <a href="{{ route('wishlists.index') }}" class="d-block text-center small text-primary fw-semibold py-3">View all wishlist</a>
+              </div>
+            </div>
+          @else
+            <a href="{{ route('login') }}" class="hbtn" title="Wishlist">
+              <svg class="ico"><use href="#i-heart"/></svg>
+              <span class="count pink" data-wishlist-count>0</span>
+            </a>
+          @endauth
           <a href="#" class="hbtn" title="Cart">
             <svg class="ico"><use href="#i-cart"/></svg>
             <span class="count">2</span>

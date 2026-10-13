@@ -2,7 +2,7 @@
 
 ## Trenutno stanje
 
-Storefront funkcionalnost je implementirana na grani `feature/ecommerce-v1`. Aplikacija i dalje koristi privremene PHP objekte i kolekcije (`App\Support\StorefrontCatalog`, `App\Support\StorefrontProductCatalog`) umjesto baze podataka — kategorije, proizvodi, brendovi i popusti se računaju iz tih servisa u memoriji na svakom zahtjevu.
+Storefront funkcionalnost je implementirana na grani `feature/database-product-catalog`. Kategorije, brendovi, proizvodi, slike i tehničke specifikacije sada dolaze iz MySQL baze kroz Eloquent modele. `DatabaseSeeder` popunjava šest kategorija i 60 demo proizvoda sa Faker podacima, slikama i detaljima specifičnim za kategoriju.
 
 ## Implementirano
 
@@ -10,26 +10,33 @@ Storefront funkcionalnost je implementirana na grani `feature/ecommerce-v1`. Apl
 
 - HTML layout referenca je refaktorisana u Laravel Blade strukturu.
 - Kreiran je zajednički storefront layout sa izdvojenim headerom, kategorijskom navigacijom, footerom i SVG ikonama.
-- Kategorije dolaze iz `StorefrontCatalog` PHP servisa, a Blade ih prikazuje u navigaciji, na početnoj i u footeru.
+- Kategorije dolaze iz tabele `categories`, a Blade ih prikazuje u navigaciji, na početnoj i u footeru.
 - Implementirana je kategorijska ruta `/categories/{category}` i `CategoryController`, sa cjenovnim filterom i paginacijom (12 proizvoda po stranici).
 - Implementirana je detaljna stranica proizvoda na ruti `/products/{product}` sa slikom, opisom, dostupnošću, specifikacijama i sekcijom "You might also like" (srodni proizvodi iz iste kategorije).
-- Kategorija "Laptops" prošireno sa 6 na 20 proizvoda, svaki sa jedinstvenom (provjereno dostupnom) slikom — ciklično dodjeljivanje slika je zaštićeno modulo operacijom da ne izlazi van granica niza.
+- Proizvodi imaju zajedničke podatke u `products`, galeriju u `product_images`, brend i kategoriju, kao i posebne 1:1 tabele za tehničke specifikacije svake kategorije.
 - Kartica proizvoda je izdvojena u zajednički partial (`resources/views/partials/product-card.blade.php`) i dijeli se između kategorijskog grida i sekcije srodnih proizvoda.
 - Dodani su "Bestseller"/"New" bedževi na odabranim proizvodima i bedž procenta popusta na kartici.
-- Dodato wishlist dugme (srce) na kartici proizvoda — vizuelni toggle bez perzistencije (nema baze/korisnika još).
+- Stranica proizvoda prikazuje tehničke specifikacije iz odgovarajuće detaljne tabele.
+
+### Wishlist
+
+- Kreirana je tabela `wishlists` sa jedinstvenim parom `user_id` i `product_id`, pa isti proizvod korisnik može sačuvati samo jednom.
+- Prijavljen korisnik može na stranici proizvoda dodati ili ukloniti proizvod iz wishliste AJAX pozivom, bez osvježavanja stranice.
+- Header prikazuje stvarni broj sačuvanih proizvoda i dropdown sa do pet posljednje dodatih stavki; JavaScript ga ažurira odmah nakon klika.
+- Ruta `/wishlist` prikazuje kompletnu korisnikovu wishlist sa paginacijom. Korpa ostaje predviđena za sesiju.
 
 ### Pretraga
 
-- Implementirana je `/search` ruta i `SearchController`, sa pretragom po nazivu i brendu proizvoda (`StorefrontProductCatalog::search()`).
+- Implementirana je `/search` ruta i `SearchController`, sa pretragom po nazivu i brendu proizvoda iz baze.
 - Header sadrži kompaktno polje za pretragu; kucanje (debounced, min. 2 karaktera) otvara dropdown sa do 6 poklapajućih proizvoda (slika, naziv, brend, cijena) ili porukom da nema rezultata.
 
 ### Početna stranica
 
 - Početna stranica sada podržava isti AJAX obrazac kao kategorije/proizvodi (`HomeController` vraća JSON kad je zahtjev AJAX, sadržaj je izdvojen u `home/partials/page-content.blade.php`).
-- Hero sekcija prikazuje stvarni "Deal of the day" izračunat iz kataloga (`StorefrontProductCatalog::deals()`) — glavna kartica i dvije sporedne kartice se biraju nasumično (shuffle) prilikom svakog učitavanja, sa pravim slikama, cijenama i procentom popusta; sve tri kartice vode na stranicu proizvoda.
+- Hero sekcija prikazuje stvarni "Deal of the day" izračunat iz kataloga — glavna kartica i dvije sporedne kartice se biraju nasumično pri svakom učitavanju, sa slikama, cijenama i procentom popusta; sve tri kartice vode na stranicu proizvoda.
 - Overlay/kontrast teksta preko fotografija u hero kartama je pojačan (tamniji gradient + text-shadow) da tekst ostane čitljiv bez obzira koja se nasumična slika pojavi.
-- "Featured" sekcija (3 kartice) sada vodi na stvarne kategorije (Laptops, Audio, Gaming) umjesto na nepostojeće "#" linkove; kartica "Smart home" (nepostojeća kategorija) zamijenjena je sa "Audio essentials".
-- "Popular brands" prikazuje 4 stvarna brenda izračunata iz kataloga (`StorefrontProductCatalog::topBrands()`, grupisano po broju proizvoda), sa stilizovanim "logo mark" inicijalom umjesto lažnih placeholder tekstova.
+- "Featured" sekcija (3 kartice) sada vodi na stvarne kategorije (Laptops, Tablets, Smartwatches) umjesto na nepostojeće "#" linkove; kartica "Smart home" (nepostojeća kategorija) zamijenjena je sa "Tablets for every day".
+- "Popular brands" prikazuje 4 stvarna brenda izračunata iz baze, grupisana po broju proizvoda, sa stilizovanim "logo mark" inicijalom umjesto lažnih placeholder tekstova.
 - Uklonjena newsletter sekcija ("Be the first to hear about deals...") sa početne stranice.
 - Top bar iznad headera ("Free shipping...", Stores/Track order/Help) je uklonjen.
 
@@ -58,7 +65,7 @@ Zajednički `resources/js/updateContent.js` prima URL i ciljni selektor (primjer
 ## Preostalo za verziju 1.0
 
 - Registracija, prijava i odjava korisnika
-- Baza, modeli, migracije i administratorsko upravljanje katalogom
-- Korpa i kreiranje kupovine/narudžbe
+- Administratorsko upravljanje katalogom
+- Korpa u sesiji i kreiranje kupovine/narudžbe
 - Pregled "Moje kupovine"
 - Admin panel
