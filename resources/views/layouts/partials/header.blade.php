@@ -27,22 +27,27 @@
             <div class="dropdown">
               <button class="hbtn" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" title="Wishlist">
                 <svg class="ico"><use href="#i-heart"/></svg>
-                <span class="count pink" data-wishlist-count>{{ $wishlistCount }}</span>
+                @if ($wishlistCount > 0)
+                  <span class="count pink" data-wishlist-badge>{{ $wishlistCount }}</span>
+                @endif
               </button>
               <div class="dropdown-menu dropdown-menu-end notif-menu mt-2">
                 <div class="d-flex justify-content-between align-items-center px-3 py-3 border-bottom">
                   <strong>Wishlist</strong>
-                  <span class="small text-secondary"><span data-wishlist-count>{{ $wishlistCount }}</span> saved</span>
+                  <span class="small text-secondary"><span data-wishlist-saved-count>{{ $wishlistCount }}</span> saved</span>
                 </div>
                 <div data-wishlist-dropdown-list>
                 @forelse ($wishlistItems as $wishlistItem)
-                  <a href="{{ route('products.show', $wishlistItem->product->slug) }}" class="notif-item c-pink" data-wishlist-dropdown-item data-product-id="{{ $wishlistItem->product->id }}">
-                    <span class="notif-icon overflow-hidden"><img src="{{ $wishlistItem->product->image }}" alt="" class="w-100 h-100 object-fit-cover"></span>
-                    <span>
-                      <span class="d-block small fw-semibold">{{ $wishlistItem->product->name }}</span>
-                      <span class="d-block small text-secondary">€{{ number_format($wishlistItem->product->price, 0, ',', '.') }}</span>
-                    </span>
-                  </a>
+                  <div class="notif-item c-pink" data-wishlist-dropdown-item data-product-id="{{ $wishlistItem->product->id }}">
+                    <a href="{{ route('products.show', $wishlistItem->product->slug) }}" class="d-flex align-items-center gap-2 text-decoration-none flex-grow-1">
+                      <span class="notif-icon overflow-hidden"><img src="{{ $wishlistItem->product->image }}" alt="" class="w-100 h-100 object-fit-cover"></span>
+                      <span>
+                        <span class="d-block small fw-semibold">{{ $wishlistItem->product->name }}</span>
+                        <span class="d-block small text-secondary">€{{ number_format($wishlistItem->product->price, 0, ',', '.') }}</span>
+                      </span>
+                    </a>
+                    <button type="button" class="wishlist-remove-btn" data-wishlist-remove data-wishlist-url="{{ route('wishlists.toggle', $wishlistItem->product) }}" data-product-id="{{ $wishlistItem->product->id }}" aria-label="Remove {{ $wishlistItem->product->name }} from wishlist">×</button>
+                  </div>
                 @empty
                   <p class="small text-secondary text-center px-3 py-4 mb-0" data-wishlist-empty>Your wishlist is empty.</p>
                 @endforelse
@@ -53,7 +58,6 @@
           @else
             <a href="{{ route('login') }}" class="hbtn" title="Wishlist">
               <svg class="ico"><use href="#i-heart"/></svg>
-              <span class="count pink" data-wishlist-count>0</span>
             </a>
           @endauth
           <a href="#" class="hbtn" title="Cart">

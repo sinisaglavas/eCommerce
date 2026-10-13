@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="680" viewBox="0 0 900 680" role="img" aria-label="Tablets demo illustration 2">
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#101b30"/><stop offset="1" stop-color="#233b59"/></linearGradient><radialGradient id="glow"><stop stop-color="#8059ef" stop-opacity=".35"/><stop offset="1" stop-color="#8059ef" stop-opacity="0"/></radialGradient></defs>
+<rect width="900" height="680" fill="url(#bg)"/><circle cx="450" cy="320" r="300" fill="url(#glow)"/>
+<ellipse cx="450" cy="548" rx="220" ry="24" fill="#060e1c" opacity=".5"/>
+<g transform="translate(250 110) scale(17)" fill="none" stroke="#8059ef" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M11 18h2"/></g>
+<text x="46" y="58" fill="#a7bbda" font-family="sans-serif" font-size="20" letter-spacing="5">VOLTIO</text><text x="450" y="605" text-anchor="middle" fill="#e4edff" font-family="sans-serif" font-size="30">Tablets</text><text x="450" y="642" text-anchor="middle" fill="#a7bbda" font-family="sans-serif" font-size="16">DEMO ILLUSTRATION · 02</text></svg>

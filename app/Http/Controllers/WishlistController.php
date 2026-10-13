@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Wishlist;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class WishlistController extends Controller
@@ -19,13 +20,14 @@ class WishlistController extends Controller
             ->paginate(12);
 
         return view('wishlists.index', [
-            'title' => 'Wishlist – Voltix',
+            'title' => 'Wishlist – '. config('app.name'),
             'products' => $products,
         ]);
     }
 
     public function toggle(Request $request, Product $product): JsonResponse
     {
+        Log::info('Proizvod koji je stigao u kontroler:', $product->toArray());
         $wishlistItem = Wishlist::query()
             ->whereBelongsTo($request->user())
             ->whereBelongsTo($product)
@@ -44,6 +46,7 @@ class WishlistController extends Controller
 
         return response()->json([
             'wishlisted' => true,
+            'productId' => $product->id,
             'wishlistCount' => $request->user()->wishlistItems()->count(),
             'wishlistItem' => [
                 'id' => $product->id,
@@ -51,6 +54,7 @@ class WishlistController extends Controller
                 'price' => number_format($product->price, 0, ',', '.'),
                 'image' => $product->image,
                 'url' => route('products.show', $product->slug),
+                'toggleUrl' => route('wishlists.toggle', $product),
             ],
         ]);
     }

@@ -296,6 +296,8 @@
     .product-wishlist-btn:hover { border-color: #f472b6; color: #f472b6; transform: scale(1.08); }
     .product-wishlist-btn.is-active { background: #f472b6; border-color: #f472b6; color: #fff; }
     .product-wishlist-btn.is-active .ico { fill: currentColor; }
+    .wishlist-remove-btn { border: 0; background: transparent; color: #94a3b8; font-size: 1.25rem; line-height: 1; padding: 4px 2px 4px 8px; }
+    .wishlist-remove-btn:hover, .wishlist-remove-btn:focus-visible { color: #f472b6; }
 
     /* ===== AJAX loading shimmer ===== */
     #page-content[aria-busy="true"] {
@@ -369,6 +371,13 @@
     .product-gallery { padding: 10px; border: 1px solid var(--bs-border-color); border-radius: 22px; background: var(--surface); }
     .product-gallery-main { position: relative; aspect-ratio: 4 / 3; overflow: hidden; border-radius: 15px; background: var(--surface-2); }
     .product-gallery-main img { width: 100%; height: 100%; object-fit: cover; }
+    .product-gallery-arrow { position: absolute; z-index: 2; top: 50%; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 0; border: 0; background: transparent; color: #f8fafc; opacity: 0; pointer-events: none; transform: translateY(-50%); transition: color .2s ease, opacity .2s ease; }
+    .product-gallery-arrow .ico { font-size: 18px; }
+    .product-gallery-arrow-prev .ico { transform: rotate(180deg); }
+    .product-gallery-main:hover .product-gallery-arrow, .product-gallery-arrow:focus-visible { opacity: 1; pointer-events: auto; }
+    .product-gallery-arrow:hover, .product-gallery-arrow:focus-visible { color: #60a5fa; }
+    .product-gallery-arrow-prev { left: 12px; }
+    .product-gallery-arrow-next { right: 12px; }
     .product-image-count { position: absolute; right: 12px; bottom: 12px; display: inline-flex; align-items: center; gap: 6px; padding: 6px 9px; border-radius: 8px; background: rgba(5, 7, 13, .78); color: #f8fafc; font-size: 12px; }
     .product-gallery-thumbnails { display: flex; gap: 8px; margin-top: 10px; }
     .product-gallery-thumbnail { width: 62px; height: 50px; padding: 0; overflow: hidden; border: 2px solid transparent; border-radius: 8px; background: transparent; }

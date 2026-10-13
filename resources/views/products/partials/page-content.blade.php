@@ -10,7 +10,15 @@
           <div class="product-gallery {{ $product->accent }}">
             <div class="product-gallery-main">
               @if ($product->image)
-                <img src="{{ $product->image }}" alt="{{ $product->name }}">
+                <img src="{{ $product->image }}" alt="{{ $product->name }}" data-product-gallery-main>
+                @if (count($product->gallery) > 1)
+                  <button type="button" class="product-gallery-arrow product-gallery-arrow-prev" data-product-gallery-prev aria-label="Previous product image">
+                    <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg>
+                  </button>
+                  <button type="button" class="product-gallery-arrow product-gallery-arrow-next" data-product-gallery-next aria-label="Next product image">
+                    <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg>
+                  </button>
+                @endif
               @else
                 <p class="text-secondary p-4">No images available.</p>
               @endif
@@ -20,7 +28,7 @@
             @if (count($product->gallery) > 1)
               <div class="product-gallery-thumbnails" aria-label="Product images">
                 @foreach ($product->gallery as $image)
-                  <button class="product-gallery-thumbnail {{ $loop->first ? 'is-active' : '' }}" type="button">
+                  <button class="product-gallery-thumbnail {{ $loop->first ? 'is-active' : '' }}" type="button" data-product-gallery-thumbnail aria-label="View {{ $product->name }} image {{ $loop->iteration }}" aria-pressed="{{ $loop->first ? 'true' : 'false' }}">
                     <img src="{{ $image }}" alt="{{ $product->name }} image {{ $loop->iteration }}" loading="lazy">
                   </button>
                 @endforeach
@@ -57,7 +65,7 @@
             <div class="d-flex flex-wrap gap-2">
               <button class="btn btn-primary btn-lg fw-semibold px-4" type="button">Add to cart</button>
               @auth
-                <button class="btn btn-outline-light btn-lg fw-semibold px-4" type="button" data-wishlist-button data-wishlist-url="{{ route('wishlists.toggle', $product) }}" data-wishlisted="{{ $isWishlisted ? 'true' : 'false' }}">
+                <button class="btn btn-outline-light btn-lg fw-semibold px-4" type="button" data-wishlist-button data-product-id="{{ $product->id }}" data-wishlist-url="{{ route('wishlists.toggle', $product) }}" data-wishlisted="{{ $isWishlisted ? 'true' : 'false' }}">
                   <svg class="ico"><use href="#i-heart"/></svg>
                   <span data-wishlist-label>{{ $isWishlisted ? 'Remove from wishlist' : 'Add to wishlist' }}</span>
                 </button>
