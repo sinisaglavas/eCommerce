@@ -16,9 +16,14 @@
                     @error('slug')<div class="invalid-feedback" id="slug-error">{{ $message }}</div>@enderror
                 </div>
                 <div class="mb-3">
-                    <label for="brand" class="form-label fw-semibold">Brend *</label>
-                    <input id="brand" name="brand" type="text" value="{{ old('brand', $product->brand ?? '') }}" class="form-control bg-body @error('brand') is-invalid @enderror" placeholder="UltraView" maxlength="255" required @error('brand') aria-invalid="true" aria-describedby="brand-error" @enderror>
-                    @error('brand')<div class="invalid-feedback" id="brand-error">{{ $message }}</div>@enderror
+                    <label for="brand_id" class="form-label fw-semibold">Brend *</label>
+                    <select id="brand_id" name="brand_id" class="form-select bg-body" required>
+                        <option value="">Izaberite brend</option>
+                        @foreach ($brands as $brand)
+                            <option value="{{ $brand->id }}" @selected((string) old('brand_id', $product->brand_id ?? '') === (string) $brand->id)>{{ $brand->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('brand_id')<p class="text-danger small">{{ $message }}</p>@enderror
                 </div>
                 <div class="mb-3">
                     <label for="price" class="form-label fw-semibold">Cena (€) *</label>
@@ -26,9 +31,9 @@
                     @error('price')<div class="invalid-feedback" id="price-error">{{ $message }}</div>@enderror
                 </div>
                 <div class="mb-3">
-                    <label for="oldPrice" class="form-label fw-semibold">Prethodna cena (€)</label>
-                    <input id="oldPrice" name="oldPrice" type="number" value="{{ old('oldPrice', $product->oldPrice ?? '') }}" class="form-control bg-body @error('oldPrice') is-invalid @enderror" placeholder="Opciono" min="0" step="0.01" @error('oldPrice') aria-invalid="true" aria-describedby="oldPrice-error" @enderror>
-                    @error('oldPrice')<div class="invalid-feedback" id="oldPrice-error">{{ $message }}</div>@enderror
+                    <label for="compare_at_price" class="form-label fw-semibold">Prethodna cena (€)</label>
+                    <input id="compare_at_price" name="compare_at_price" type="number" value="{{ old('compare_at_price', $product->compare_at_price ?? '') }}" class="form-control bg-body @error('compare_at_price') is-invalid @enderror" placeholder="Opciono" min="0" step="0.01" @error('compare_at_price') aria-invalid="true" aria-describedby="compare_at_price-error" @enderror>
+                    @error('compare_at_price')<div class="invalid-feedback" id="compare_at_price-error">{{ $message }}</div>@enderror
                 </div>
                 <div class="mb-3">
                     <label for="image" class="form-label fw-semibold">URL slike *</label>
@@ -36,21 +41,21 @@
                     @error('image')<div class="invalid-feedback" id="image-error">{{ $message }}</div>@enderror
                 </div>
                 <div class="mb-3">
-                    <label for="categorySlug" class="form-label fw-semibold">Kategorija *</label>
-                    <select id="categorySlug" name="categorySlug" class="form-select bg-body @error('categorySlug') is-invalid @enderror" required @error('categorySlug') aria-invalid="true" aria-describedby="category-error" @enderror>
+                    <label for="category_id" class="form-label fw-semibold">Kategorija *</label>
+                    <select id="category_id" name="category_id" class="form-select bg-body @error('category_id') is-invalid @enderror" required @error('category_id') aria-invalid="true" aria-describedby="category-error" @enderror>
                         <option value="">Izaberite kategoriju</option>
                         @foreach ($categories as $category)
-                            <option value="{{ $category->slug }}" @selected(old('categorySlug', $product->categorySlug ?? '') === $category->slug)>{{ $category->name }}</option>
+                            <option value="{{ $category->id }}" @selected((string) old('category_id', $product->category_id ?? '') === (string) $category->id)>{{ $category->name }}</option>
                         @endforeach
                     </select>
-                    @error('categorySlug')<div class="invalid-feedback" id="category-error">{{ $message }}</div>@enderror
+                    @error('category_id')<div class="invalid-feedback" id="category-error">{{ $message }}</div>@enderror
                 </div>
                 <div class="mb-4">
                     <label for="description" class="form-label fw-semibold">Opis *</label>
                     <textarea id="description" name="description" rows="5" class="form-control bg-body @error('description') is-invalid @enderror" required @error('description') aria-invalid="true" aria-describedby="description-error" @enderror>{{ old('description', $product->description ?? '') }}</textarea>
                     @error('description')<div class="invalid-feedback" id="description-error">{{ $message }}</div>@enderror
                 </div>
-                <p class="small text-body-secondary" role="status">Privremeni katalog: čuvanje izmena još nije dostupno.</p>
+                <p class="small text-body-secondary" role="status">Čuvanje izmena još nije dostupno.</p>
                 <div class="d-flex gap-2 border-top pt-4">
                     <button class="btn btn-primary" type="submit" disabled>{{ $editing ? 'Sačuvaj izmene' : 'Kreiraj proizvod' }}</button>
                     <a href="{{ route('admin.products') }}" class="btn btn-outline-secondary">Otkaži</a>

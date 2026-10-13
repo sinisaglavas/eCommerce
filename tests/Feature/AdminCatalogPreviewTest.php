@@ -2,43 +2,51 @@
 
 namespace Tests\Feature;
 
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Product;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class AdminCatalogPreviewTest extends TestCase
 {
-    public function test_catalog_previews_require_an_administrator(): void
-    {
-        $paths = ['/admin/products', '/admin/products/create', '/admin/products/aerobook-pro-14/edit', '/admin/orders', '/admin/orders/DEMO-1002'];
+    use RefreshDatabase;
 
+    public function test_admin_pages_require_an_administrator(): void
+    {
+        $paths = ['/admin', '/admin/categories', '/admin/products', '/admin/products/create', '/admin/products/missing/edit', '/admin/orders'];
         foreach ($paths as $path) {
             $this->get($path)->assertRedirect(route('login'));
         }
-
-        $this->actingAs((new User)->forceFill(['id' => 1, 'name' => 'Customer', 'is_admin' => false]));
-
+        $this->actingAs(User::factory()->create(['is_admin' => false]));
         foreach ($paths as $path) {
             $this->get($path)->assertForbidden();
         }
     }
 
-    public function test_administrator_can_browse_products_and_open_prefilled_forms(): void
+    public function test_admin_catalog_uses_database_values_including_inactive_products(): void
     {
-        $this->actingAs((new User)->forceFill(['id' => 2, 'name' => 'Admin', 'is_admin' => true]));
-
-        $this->get('/admin/products')->assertOk()->assertSee('AeroBook Pro 14')->assertSee('page=2', false);
-        $this->get('/admin/products?page=2')->assertOk()->assertDontSee('AeroBook Pro 14');
-        $this->get('/admin/products/create')->assertOk()->assertSee('Novi proizvod')->assertSee('Smartphones');
-        $this->get('/admin/products/aerobook-pro-14/edit')->assertOk()->assertSee('value="AeroBook Pro 14"', false)->assertSee('value="1299"', false);
+        $this->actingAs(User::factory()->create(['is_admin' => true]));
+        $category = Category::factory()->create(['name' => 'Database category']);
+        $brand = Brand::factory()->create(['name' => 'Database brand']);
+        $product = Product::factory()->for($category)->for($brand)->create(['name' => 'Database product', 'price' => 123.45, 'is_active' => false]);
+        Product::factory()->count(12)->for($category)->for($brand)->create();
+        $this->get('/admin/categories')->assertOk()->assertSee('Database category');
+        $this->get('/admin/products')->assertOk()->assertSee('Database product')->assertSee('Database brand')->assertSee('123,45')->assertSee('page=2', false);
+        $this->get('/admin/products?page=2')->assertOk()->assertDontSee('Database product');
+        $this->get('/admin/products/create')->assertOk()->assertSee('Database category')->assertSee('Database brand');
+        $this->get('/admin/products/'.$product->slug.'/edit')->assertOk()->assertSee('value="Database product"', false)->assertSee('value="123.45"', false);
         $this->get('/admin/products/missing/edit')->assertNotFound();
+        $this->get('/admin')->assertOk()->assertViewHas('productsCount', 13)->assertViewHas('categoriesCount', 1);
     }
 
-    public function test_demo_orders_are_labelled_and_totals_include_quantities(): void
+    public function test_empty_database_and_unimplemented_orders_do_not_show_demo_data(): void
     {
-        $this->actingAs((new User)->forceFill(['id' => 2, 'name' => 'Admin', 'is_admin' => true]));
-
-        $this->get('/admin/orders')->assertOk()->assertSee('Demo podaci')->assertSee('DEMO-1002');
-        $this->get('/admin/orders/DEMO-1002')->assertOk()->assertSee('Demo porudžbina')->assertSee('Studio Buds')->assertSee('€358,00')->assertSee('€1.657,00');
-        $this->get('/admin/orders/missing')->assertNotFound();
+        $this->actingAs(User::factory()->create(['is_admin' => true]));
+        $this->get('/admin/products')->assertOk()->assertSee('Nema proizvoda za prikaz.');
+        $this->get('/admin/categories')->assertOk()->assertSee('Nema kategorija za prikaz');
+        $this->get('/admin/orders')->assertOk()->assertSee('Pregled porudžbina još nije dostupan')->assertDontSee('DEMO-');
+        $this->get('/admin/orders/DEMO-1002')->assertNotFound();
     }
 }

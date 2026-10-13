@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Support\StorefrontCatalog;
+use App\Models\Category;
 use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
-    public function index(StorefrontCatalog $catalog): View
+    public function index(): View
     {
         return view('admin.categories.index', [
-            'categories' => $catalog->categories(),
+            'categories' => Category::query()->orderBy('sort_order')->paginate(20),
         ]);
     }
 }

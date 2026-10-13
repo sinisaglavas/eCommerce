@@ -6,7 +6,7 @@
         <a href="{{ route('admin.products.create') }}" class="btn btn-primary px-4 py-2">+ Novi proizvod</a>
     </div>
     <section class="panel overflow-hidden">
-        <div class="welcome-panel p-4 border-bottom"><h2 class="h5">Katalog proizvoda <span class="badge text-bg-secondary ms-2">{{ $products->total() }}</span></h2><p class="small text-body-secondary mb-0">Prikaz privremenih podataka iz kataloga.</p></div>
+        <div class="welcome-panel p-4 border-bottom"><h2 class="h5">Katalog proizvoda <span class="badge text-bg-secondary ms-2">{{ $products->total() }}</span></h2><p class="small text-body-secondary mb-0">Aktuelni proizvodi iz kataloga.</p></div>
         <div class="table-responsive">
             <table class="table table-dark table-hover admin-table align-middle mb-0">
                 <caption class="visually-hidden">Proizvodi u katalogu</caption>
@@ -14,9 +14,9 @@
                 <tbody>
                 @forelse ($products as $product)
                     <tr>
-                        <th scope="row" class="p-3"><div class="d-flex gap-3 align-items-center"><img src="{{ $product->image }}" alt="" class="product-thumbnail" loading="lazy"><div>{{ $product->name }}<span class="d-block small fw-normal text-body-secondary">{{ $product->brand }}</span></div></div></th>
-                        <td class="p-3">{{ $categories->get($product->categorySlug)?->name ?? $product->categorySlug }}</td>
-                        <td class="p-3 text-nowrap">€{{ number_format($product->price, 2, ',', '.') }} @if($product->oldPrice)<del class="d-block small text-body-secondary">€{{ number_format($product->oldPrice, 2, ',', '.') }}</del>@endif</td>
+                        <th scope="row" class="p-3"><div class="d-flex gap-3 align-items-center"><img src="{{ $product->image }}" alt="" class="product-thumbnail" loading="lazy"><div>{{ $product->name }}<span class="d-block small fw-normal text-body-secondary">{{ $product->brand?->name }}</span></div></div></th>
+                        <td class="p-3">{{ $product->category?->name ?? '—' }}</td>
+                        <td class="p-3 text-nowrap">€{{ number_format($product->price, 2, ',', '.') }} @if($product->compare_at_price)<del class="d-block small text-body-secondary">€{{ number_format($product->compare_at_price, 2, ',', '.') }}</del>@endif</td>
                         <td class="p-3 text-end"><a href="{{ route('admin.products.edit', $product->slug) }}" class="btn btn-sm btn-outline-secondary" aria-label="Izmeni {{ $product->name }}">Izmeni</a></td>
                     </tr>
                 @empty

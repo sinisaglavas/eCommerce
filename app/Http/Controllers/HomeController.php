@@ -15,10 +15,6 @@ class HomeController extends Controller
     {
         $viewData = [
             'title' => config('app.name').' – Electronics Store',
-            'categories' => $catalog->categories(),
-            'deals' => $products->deals(3),
-            'brands' => $products->topBrands(4),
-            'title' => config('app.name').' – Electronics Store',
             'categories' => Category::where('is_active', true)->orderBy('sort_order')->withCount('products')->get(),
             'deals' => Product::active()->whereNotNull('compare_at_price')->with('category')->inRandomOrder()->limit(3)->get(),
             'brands' => Brand::withCount('products')->orderByDesc('products_count')->limit(4)->get(),

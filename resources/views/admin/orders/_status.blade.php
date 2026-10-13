@@ -1,1 +1,0 @@
-<span class="badge rounded-pill {{ ['new' => 'text-bg-primary', 'processing' => 'text-bg-warning', 'completed' => 'text-bg-success', 'cancelled' => 'text-bg-secondary'][$status] ?? 'text-bg-secondary' }}">{{ $statuses[$status] ?? $status }}</span>

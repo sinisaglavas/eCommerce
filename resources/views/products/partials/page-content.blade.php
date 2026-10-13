@@ -9,7 +9,11 @@
         <div class="col-lg-5">
           <div class="product-gallery {{ $product->accent }}">
             <div class="product-gallery-main">
-              <img src="{{ $product->gallery[0] }}" alt="{{ $product->name }}">
+              @if ($product->image)
+                <img src="{{ $product->image }}" alt="{{ $product->name }}">
+              @else
+                <p class="text-secondary p-4">No images available.</p>
+              @endif
               <span class="product-image-count"><svg class="ico"><use href="#i-camera"/></svg>{{ count($product->gallery) }} photo{{ count($product->gallery) === 1 ? '' : 's' }}</span>
             </div>
 
@@ -28,7 +32,7 @@
           <div class="product-summary">
             <div class="d-flex align-items-center justify-content-between gap-3 mb-3">
               <span class="product-brand">{{ $product->brand->name }}</span>
-              <span class="product-stock"><svg class="ico"><use href="#i-shield"/></svg>In stock</span>
+              <span class="product-stock"><svg class="ico"><use href="#i-shield"/></svg>{{ $product->stock_quantity > 0 ? 'In stock' : 'Out of stock' }}</span>
             </div>
 
             <h1 class="display-6 fw-bold section-title mb-3">{{ $product->name }}</h1>
@@ -47,7 +51,7 @@
             <div class="d-flex flex-wrap gap-2 mb-4">
               <span class="product-benefit"><svg class="ico"><use href="#i-truck"/></svg>Free delivery</span>
               <span class="product-benefit"><svg class="ico"><use href="#i-refresh"/></svg>30-day returns</span>
-              <span class="product-benefit"><svg class="ico"><use href="#i-shield"/></svg>2-year warranty</span>
+              <span class="product-benefit"><svg class="ico"><use href="#i-shield"/></svg>{{ $product->warranty_months }}-month warranty</span>
             </div>
 
             <div class="d-flex flex-wrap gap-2">
