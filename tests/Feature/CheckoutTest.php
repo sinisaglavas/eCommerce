@@ -23,7 +23,7 @@ class CheckoutTest extends TestCase
 
         $order = Order::query()->firstOrFail();
         $response->assertRedirect(route('checkout.success', $order));
-        $this->assertDatabaseHas('orders', ['id' => $order->id, 'email' => 'ana@example.com', 'total' => 499.99]);
+        $this->assertDatabaseHas('orders', ['id' => $order->id, 'email' => 'ana@example.com', 'status' => 'awaiting_payment', 'total' => 499.99]);
         $this->assertDatabaseHas('order_items', ['order_id' => $order->id, 'product_id' => $product->id, 'quantity' => 1, 'unit_price' => 499.99]);
         $response->assertSessionMissing('cart');
         $this->get(route('checkout.success', $order))->assertOk()->assertSee('Order saved successfully')->assertSee('payment details by email')->assertSee('My orders');

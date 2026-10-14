@@ -21,17 +21,6 @@
                            required @error('name') aria-invalid="true" aria-describedby="name-error" @enderror>
                     @error('name')<div id="name-error" class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>
-                <div class="mb-4">
-                    <label for="slug" class="form-label fw-semibold">Slug *</label>
-                    <input type="text" name="slug" id="slug" class="form-control bg-body @error('slug') is-invalid @enderror"
-                           value="{{ old('slug', $category->slug ?? '') }}" placeholder="Na primer: gaming-laptops"
-                           pattern="[a-z0-9]+(-[a-z0-9]+)*" maxlength="255" required aria-describedby="slug-help
-                           @error('slug') slug-error @enderror"
-                           @error('slug') aria-invalid="true" @enderror>
-                    <div id="slug-help" class="form-text">
-                        Deo URL adrese: /categories/gaming-laptops. Koristite mala engleska slova, brojeve i crtice.</div>
-                    @error('slug')<div id="slug-error" class="invalid-feedback">{{ $message }}</div>@enderror
-                </div>
                 <div class="row g-4 mb-4">
                     <div class="col-md-6">
                         <label for="icon" class="form-label fw-semibold">Ikonica *</label>
@@ -56,9 +45,6 @@
                         @error('color')<div id="color-error" class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                 </div>
-                @unless ($action)
-                    <p class="small text-body-secondary" role="status">Čuvanje kategorija još nije dostupno.</p>
-                @endunless
                 <div class="border-top pt-4 d-flex gap-2 flex-wrap">
                     <button type="submit" class="btn btn-primary px-4"
                         @disabled(!$action)>{{ $editing ? 'Sačuvaj izmene' : 'Kreiraj kategoriju' }}
@@ -75,12 +61,6 @@
             <span class="stat-icon mb-3" aria-hidden="true">▤</span>
             <h2 class="h5">Jasno organizovana ponuda</h2>
             <p class="small text-body-secondary">Kratak i prepoznatljiv naziv olakšava kupcima da pronađu proizvode.</p>
-            <hr>
-            <h3 class="h6">Adresa kategorije</h3>
-            <p class="small text-body-secondary mb-0">
-                Slug treba da bude jedinstven. Promena postojećeg sluga menja adresu kategorije i može uticati na ranije
-                podeljene linkove.
-            </p>
         </div>
     </aside>
 </div>

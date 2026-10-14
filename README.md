@@ -50,3 +50,28 @@ docker compose -f compose.dev.yaml ps -a
 ```bash
 docker compose -f compose.dev.yaml stop
 ```
+### Refresh migration + re-seeder initialization
+```bash
+docker compose -f compose.dev.yaml run --rm workspace php artisan migrate:fresh --seed
+```
+
+### View all tables related to the application
+```bash
+docker compose -f compose.dev.yaml exec mysql   mysql -ularavel -ppassword app -e "SHOW TABLES;"
+```
+
+### Clearing the Docker build cache can free up several gigabytes (safe cleaning)
+```bash
+docker builder prune -af
+```
+
+### Removing stalled containers:
+```bash
+docker container prune
+
+```
+
+### Removing an image that is not being used by any active container:
+```bash
+docker image prune -a
+```

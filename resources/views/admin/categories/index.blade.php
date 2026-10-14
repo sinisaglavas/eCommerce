@@ -41,11 +41,20 @@
                             <td class="py-3 text-body-secondary">{{ $category->icon }}</td>
                             <td class="py-3 text-body-secondary">{{ ['c-blue' => 'Plava', 'c-violet' => 'Ljubičasta', 'c-slate' => 'Siva', 'c-indigo' => 'Indigo', 'c-pink' => 'Roze', 'c-red' => 'Crvena'][$category->color] ?? $category->color }}</td>
                             <td class="px-4 py-3 text-end">
-                                @if (Route::has('admin.categories.edit'))
-                                    <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-outline-secondary btn-sm" aria-label="Izmeni kategoriju {{ $category->name }}">Izmeni</a>
-                                @else
-                                    <button type="button" class="btn btn-outline-secondary btn-sm" disabled>Izmeni</button>
-                                @endif
+                                <div class="d-inline-flex gap-2">
+                                    @if (Route::has('admin.categories.edit'))
+                                        <a href="{{ route('admin.categories.edit', $category) }}" class="btn btn-outline-secondary btn-sm" aria-label="Izmeni kategoriju {{ $category->name }}">Izmeni</a>
+                                    @else
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" disabled>Izmeni</button>
+                                    @endif
+                                    @if (Route::has('admin.categories.destroy'))
+                                        <form method="POST" action="{{ route('admin.categories.destroy', $category) }}" class="d-inline" onsubmit="return confirm('Da li sigurno želite da obrišete kategoriju?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-outline-danger btn-sm" aria-label="Obriši kategoriju {{ $category->name }}">Obriši</button>
+                                        </form>
+                                    @endif
+                                </div>
                             </td>
                         </tr>
                     @empty
