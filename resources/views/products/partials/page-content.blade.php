@@ -63,7 +63,17 @@
             </div>
 
             <div class="d-flex flex-wrap gap-2">
-              <button class="btn btn-primary btn-lg fw-semibold px-4" type="button">Add to cart</button>
+              @if ($product->stock_quantity > 0)
+                <form method="POST" action="{{ $isInCart ? route('cart.destroy', $product) : route('cart.store', $product) }}" data-cart-form data-cart-in-cart="{{ $isInCart ? 'true' : 'false' }}" data-cart-add-url="{{ route('cart.store', $product) }}" data-cart-remove-url="{{ route('cart.destroy', $product) }}">
+                  @csrf
+                  @if ($isInCart)
+                    @method('DELETE')
+                  @endif
+                  <button class="btn btn-{{ $isInCart ? 'outline-light' : 'primary' }} btn-lg fw-semibold px-4" type="submit" data-cart-button>{{ $isInCart ? 'Remove from cart' : 'Add to cart' }}</button>
+                </form>
+              @else
+                <button class="btn btn-secondary btn-lg fw-semibold px-4" type="button" disabled>Out of stock</button>
+              @endif
               @auth
                 <button class="btn btn-outline-light btn-lg fw-semibold px-4" type="button" data-wishlist-button data-product-id="{{ $product->id }}" data-wishlist-url="{{ route('wishlists.toggle', $product) }}" data-wishlisted="{{ $isWishlisted ? 'true' : 'false' }}">
                   <svg class="ico"><use href="#i-heart"/></svg>
