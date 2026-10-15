@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
@@ -19,7 +20,7 @@ Route::get('/search', SearchController::class)->name('search');
 Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-Route::post('/products/{product}/cart', [CartController::class, 'store'])->name('cart.store');
+Route::post('/products/{product}/cart', [CartController::class, 'store'])->middleware('auth')->name('cart.store');
 Route::patch('/cart/{product}', [CartController::class, 'update'])->name('cart.update');
 Route::delete('/cart/{product}', [CartController::class, 'destroy'])->name('cart.destroy');
 Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout.create');
@@ -35,10 +36,17 @@ Route::prefix('admin')
     ->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/categories', [AdminCategoryController::class, 'index'])->name('categories');
+        Route::get('/categories/create', [AdminCategoryController::class, 'create'])->name('categories.create');
+        Route::post('/categories', [AdminCategoryController::class, 'store'])->name('categories.store');
+        Route::get('/categories/{category}/edit', [AdminCategoryController::class, 'edit'])->name('categories.edit');
+        Route::put('/categories/{category}', [AdminCategoryController::class, 'update'])->name('categories.update');
+        Route::delete('/categories/{category}', [AdminCategoryController::class, 'destroy'])->name('categories.destroy');
         Route::get('/products', [AdminProductController::class, 'index'])->name('products');
         Route::get('/products/create', [AdminProductController::class, 'create'])->name('products.create');
         Route::get('/products/{product}/edit', [AdminProductController::class, 'edit'])->name('products.edit');
-        Route::view('/orders', 'admin.orders.index')->name('orders');
+        Route::put('/products/{product}', [AdminProductController::class, 'update'])->name('products.update');
+        Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders');
+        Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.status');
 
         // Rute za kategorije proizvode i porudžbine.
     });

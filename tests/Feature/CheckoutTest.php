@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -16,6 +17,7 @@ class CheckoutTest extends TestCase
     {
         $this->withoutVite();
         $this->withoutMiddleware(PreventRequestForgery::class);
+        $this->actingAs(User::factory()->create());
         $product = Product::factory()->create(['name' => 'Checkout laptop', 'price' => 499.99, 'stock_quantity' => 3]);
         $this->post(route('cart.store', $product));
 
@@ -23,7 +25,7 @@ class CheckoutTest extends TestCase
 
         $order = Order::query()->firstOrFail();
         $response->assertRedirect(route('checkout.success', $order));
-        $this->assertDatabaseHas('orders', ['id' => $order->id, 'email' => 'ana@example.com', 'total' => 499.99]);
+        $this->assertDatabaseHas('orders', ['id' => $order->id, 'email' => 'ana@example.com', 'status' => 'awaiting_payment', 'total' => 499.99]);
         $this->assertDatabaseHas('order_items', ['order_id' => $order->id, 'product_id' => $product->id, 'quantity' => 1, 'unit_price' => 499.99]);
         $response->assertSessionMissing('cart');
         $this->get(route('checkout.success', $order))->assertOk()->assertSee('Order saved successfully')->assertSee('payment details by email')->assertSee('My orders');
@@ -33,6 +35,7 @@ class CheckoutTest extends TestCase
     {
         $this->withoutVite();
         $this->withoutMiddleware(PreventRequestForgery::class);
+        $this->actingAs(User::factory()->create());
         $product = Product::factory()->create(['stock_quantity' => 3]);
         $this->post(route('cart.store', $product));
 

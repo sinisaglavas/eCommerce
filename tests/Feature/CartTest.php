@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Product;
 use App\Models\ProductImage;
+use App\Models\User;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -12,10 +13,11 @@ class CartTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_guest_can_add_update_and_remove_a_product_in_the_session_cart(): void
+    public function test_authenticated_user_can_add_update_and_remove_a_product_in_the_session_cart(): void
     {
         $this->withoutVite();
         $this->withoutMiddleware(PreventRequestForgery::class);
+        $this->actingAs(User::factory()->create());
         $product = Product::factory()->create(['name' => 'Session laptop', 'price' => 499.99, 'stock_quantity' => 3]);
         ProductImage::factory()->for($product)->create(['path' => '/images/demo/products/laptops-1.svg']);
 
@@ -31,6 +33,7 @@ class CartTest extends TestCase
     {
         $this->withoutVite();
         $this->withoutMiddleware(PreventRequestForgery::class);
+        $this->actingAs(User::factory()->create());
         $product = Product::factory()->create(['name' => 'Current price laptop', 'price' => 200, 'stock_quantity' => 2]);
 
         $this->post(route('cart.store', $product))->assertRedirect(route('cart.index'));
@@ -40,10 +43,26 @@ class CartTest extends TestCase
         $this->patch(route('cart.update', $product), ['quantity' => 0])->assertRedirect()->assertSessionHasErrors('quantity');
     }
 
+    public function test_quantity_update_returns_totals_for_ajax_cart_refresh(): void
+    {
+        $this->withoutVite();
+        $this->withoutMiddleware(PreventRequestForgery::class);
+        $this->actingAs(User::factory()->create());
+        $product = Product::factory()->create(['price' => 125.50, 'stock_quantity' => 4]);
+        $this->post(route('cart.store', $product));
+
+        $this->patchJson(route('cart.update', $product), ['quantity' => 3])
+            ->assertOk()
+            ->assertJsonPath('cartCount', 3)
+            ->assertJsonPath('subtotal', 376.5)
+            ->assertJsonPath('total', 376.5);
+    }
+
     public function test_adding_a_product_returns_cart_data_for_the_header_dropdown(): void
     {
         $this->withoutVite();
         $this->withoutMiddleware(PreventRequestForgery::class);
+        $this->actingAs(User::factory()->create());
         $product = Product::factory()->create(['name' => 'Dropdown laptop', 'price' => 499, 'stock_quantity' => 3]);
         ProductImage::factory()->for($product)->create(['path' => '/images/demo/products/laptops-1.svg']);
 
@@ -58,12 +77,24 @@ class CartTest extends TestCase
     {
         $this->withoutVite();
         $this->withoutMiddleware(PreventRequestForgery::class);
+        $this->actingAs(User::factory()->create());
         $product = Product::factory()->create(['stock_quantity' => 3]);
 
         $this->postJson(route('cart.store', $product))->assertOk();
         $this->deleteJson(route('cart.destroy', $product))->assertOk()
             ->assertJsonPath('cartCount', 0)
             ->assertJsonPath('productId', $product->id)
+            ->assertSessionMissing('cart.'.$product->id);
+    }
+
+    public function test_guest_cannot_add_a_product_to_the_cart(): void
+    {
+        $this->withoutVite();
+        $this->withoutMiddleware(PreventRequestForgery::class);
+        $product = Product::factory()->create(['stock_quantity' => 3]);
+
+        $this->post(route('cart.store', $product))
+            ->assertRedirect(route('login'))
             ->assertSessionMissing('cart.'.$product->id);
     }
 }

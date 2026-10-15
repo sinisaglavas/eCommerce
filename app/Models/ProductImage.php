@@ -12,6 +12,8 @@ class ProductImage extends Model
     /** @use HasFactory<ProductImageFactory> */
     use HasFactory;
 
+    protected $fillable = ['disk', 'path', 'alt_text', 'sort_order', 'is_primary'];
+
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);

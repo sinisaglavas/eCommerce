@@ -64,13 +64,17 @@
 
             <div class="d-flex flex-wrap gap-2">
               @if ($product->stock_quantity > 0)
-                <form method="POST" action="{{ $isInCart ? route('cart.destroy', $product) : route('cart.store', $product) }}" data-cart-form data-cart-in-cart="{{ $isInCart ? 'true' : 'false' }}" data-cart-add-url="{{ route('cart.store', $product) }}" data-cart-remove-url="{{ route('cart.destroy', $product) }}">
-                  @csrf
-                  @if ($isInCart)
-                    @method('DELETE')
-                  @endif
-                  <button class="btn btn-{{ $isInCart ? 'outline-light' : 'primary' }} btn-lg fw-semibold px-4" type="submit" data-cart-button>{{ $isInCart ? 'Remove from cart' : 'Add to cart' }}</button>
-                </form>
+                @auth
+                  <form method="POST" action="{{ $isInCart ? route('cart.destroy', $product) : route('cart.store', $product) }}" data-cart-form data-cart-in-cart="{{ $isInCart ? 'true' : 'false' }}" data-cart-add-url="{{ route('cart.store', $product) }}" data-cart-remove-url="{{ route('cart.destroy', $product) }}">
+                    @csrf
+                    @if ($isInCart)
+                      @method('DELETE')
+                    @endif
+                    <button class="btn btn-{{ $isInCart ? 'outline-light' : 'primary' }} btn-lg fw-semibold px-4" type="submit" data-cart-button>{{ $isInCart ? 'Remove from cart' : 'Add to cart' }}</button>
+                  </form>
+                @else
+                  <button class="btn btn-primary btn-lg fw-semibold px-4" type="button" data-login-required="cart" onclick="event.preventDefault(); event.stopPropagation(); window.showLoginRequiredNotice('cart');">Add to cart</button>
+                @endauth
               @else
                 <button class="btn btn-secondary btn-lg fw-semibold px-4" type="button" disabled>Out of stock</button>
               @endif
@@ -80,9 +84,9 @@
                   <span data-wishlist-label>{{ $isWishlisted ? 'Remove from wishlist' : 'Add to wishlist' }}</span>
                 </button>
               @else
-                <a class="btn btn-outline-light btn-lg fw-semibold px-4" href="{{ route('login') }}">
+                <button class="btn btn-outline-light btn-lg fw-semibold px-4" type="button" data-login-required="wishlist" onclick="event.preventDefault(); event.stopPropagation(); window.showLoginRequiredNotice('wishlist');">
                   <svg class="ico"><use href="#i-heart"/></svg> Add to wishlist
-                </a>
+                </button>
               @endauth
             </div>
           </div>

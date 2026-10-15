@@ -2,18 +2,13 @@
     <div class="col-12 col-xl-8">
         <section class="panel overflow-hidden">
             <div class="welcome-panel border-bottom p-4"><h2 class="h5 mb-1">Podaci o proizvodu</h2><p class="small text-body-secondary mb-0">Polja označena zvezdicom su obavezna.</p></div>
-            <form method="POST" onsubmit="return false" class="p-4">
+            <form method="POST" @if(empty($action)) onsubmit="return false" @else action="{{ $action }}" @endif class="p-4">
                 @csrf
                 @if ($editing) @method('PUT') @endif
                 <div class="mb-3">
                     <label for="name" class="form-label fw-semibold">Naziv proizvoda *</label>
                     <input id="name" name="name" type="text" value="{{ old('name', $product->name ?? '') }}" class="form-control bg-body @error('name') is-invalid @enderror" placeholder="Na primer: UltraView 27" maxlength="255" required @error('name') aria-invalid="true" aria-describedby="name-error" @enderror>
                     @error('name')<div class="invalid-feedback" id="name-error">{{ $message }}</div>@enderror
-                </div>
-                <div class="mb-3">
-                    <label for="slug" class="form-label fw-semibold">Slug *</label>
-                    <input id="slug" name="slug" type="text" value="{{ old('slug', $product->slug ?? '') }}" class="form-control bg-body @error('slug') is-invalid @enderror" placeholder="ultraview-27" maxlength="255" required pattern="[a-z0-9]+(-[a-z0-9]+)*" @error('slug') aria-invalid="true" aria-describedby="slug-error" @enderror>
-                    @error('slug')<div class="invalid-feedback" id="slug-error">{{ $message }}</div>@enderror
                 </div>
                 <div class="mb-3">
                     <label for="brand_id" class="form-label fw-semibold">Brend *</label>
@@ -36,8 +31,8 @@
                     @error('compare_at_price')<div class="invalid-feedback" id="compare_at_price-error">{{ $message }}</div>@enderror
                 </div>
                 <div class="mb-3">
-                    <label for="image" class="form-label fw-semibold">URL slike *</label>
-                    <input id="image" name="image" type="url" value="{{ old('image', $product->image ?? '') }}" class="form-control bg-body @error('image') is-invalid @enderror" placeholder="https://..." required @error('image') aria-invalid="true" aria-describedby="image-error" @enderror>
+                    <label for="image" class="form-label fw-semibold">Putanja ili URL slike *</label>
+                    <input id="image" name="image" type="text" value="{{ old('image', $product->image ?? '') }}" class="form-control bg-body @error('image') is-invalid @enderror" placeholder="/images/... ili https://..." required @error('image') aria-invalid="true" aria-describedby="image-error" @enderror>
                     @error('image')<div class="invalid-feedback" id="image-error">{{ $message }}</div>@enderror
                 </div>
                 <div class="mb-3">
@@ -55,9 +50,11 @@
                     <textarea id="description" name="description" rows="5" class="form-control bg-body @error('description') is-invalid @enderror" required @error('description') aria-invalid="true" aria-describedby="description-error" @enderror>{{ old('description', $product->description ?? '') }}</textarea>
                     @error('description')<div class="invalid-feedback" id="description-error">{{ $message }}</div>@enderror
                 </div>
-                <p class="small text-body-secondary" role="status">Čuvanje izmena još nije dostupno.</p>
+                @unless ($action ?? null)
+                    <p class="small text-body-secondary" role="status">Čuvanje izmena još nije dostupno.</p>
+                @endunless
                 <div class="d-flex gap-2 border-top pt-4">
-                    <button class="btn btn-primary" type="submit" disabled>{{ $editing ? 'Sačuvaj izmene' : 'Kreiraj proizvod' }}</button>
+                    <button class="btn btn-primary" type="submit" @disabled(empty($action))>{{ $editing ? 'Sačuvaj izmene' : 'Kreiraj proizvod' }}</button>
                     <a href="{{ route('admin.products') }}" class="btn btn-outline-secondary">Otkaži</a>
                 </div>
             </form>

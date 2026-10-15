@@ -1,11 +1,71 @@
 @extends('layouts.admin')
 @section('title', 'Porudžbine')
 @section('content')
-    <p class="eyebrow mb-2">UPRAVLJANJE KUPOVINAMA</p>
-    <h1 class="h2 fw-bold mb-4">Porudžbine</h1>
-    <section class="panel p-5 text-center">
-        <span class="stat-icon mb-3" aria-hidden="true">▧</span>
-        <h2 class="h5">Pregled porudžbina još nije dostupan</h2>
-        <p class="text-body-secondary mb-0">Porudžbine će biti prikazane kada se omogući kupovina.</p>
+    <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap mb-4">
+        <div>
+            <p class="eyebrow mb-2">UPRAVLJANJE KUPOVINAMA</p>
+            <h1 class="h2 fw-bold mb-2">Porudžbine</h1>
+            <p class="text-body-secondary mb-0">Pregled svih porudžbina kupaca.</p>
+        </div>
+        <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-secondary">← Dashboard</a>
+    </div>
+
+    <section class="panel overflow-hidden" aria-labelledby="orders-title">
+        <div class="welcome-panel border-bottom p-4">
+            <h2 id="orders-title" class="h5 mb-1">Sve porudžbine <span class="badge text-bg-secondary ms-2">{{ $orders->total() }}</span></h2>
+            <p class="small text-body-secondary mb-0">Najnovije porudžbine prikazane su prve.</p>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-dark table-hover admin-table align-middle mb-0">
+                <caption class="visually-hidden">Lista svih porudžbina</caption>
+                <thead>
+                    <tr>
+                        <th scope="col" class="px-4 py-3">Porudžbina</th>
+                        <th scope="col" class="py-3">Kupac</th>
+                        <th scope="col" class="py-3">Datum</th>
+                        <th scope="col" class="py-3">Status</th>
+                        <th scope="col" class="py-3 text-nowrap">Izmeni status</th>
+                        <th scope="col" class="px-4 py-3 text-end">Iznos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($orders as $order)
+                        <tr>
+                            <th scope="row" class="px-4 py-3 text-nowrap">{{ $order->number }}</th>
+                            <td class="py-3">{{ $order->first_name }} {{ $order->last_name }}</td>
+                            <td class="py-3 text-body-secondary text-nowrap">{{ $order->created_at->format('d.m.Y. H:i') }}</td>
+                            <td class="py-3 text-nowrap">
+                                <strong>{{ \App\Models\Order::STATUS_LABELS[$order->status] ?? $order->status }}</strong>
+                            </td>
+                            <td class="py-3">
+                                <form method="POST" action="{{ route('admin.orders.status', $order) }}" class="d-flex align-items-center gap-2">
+                                    @csrf
+                                    @method('PATCH')
+                                    <label class="visually-hidden" for="order-status-{{ $order->id }}">Novi status porudžbine {{ $order->number }}</label>
+                                    <select id="order-status-{{ $order->id }}" name="status" class="form-select form-select-sm bg-body" style="width: 140px" aria-label="Novi status porudžbine {{ $order->number }}">
+                                        @foreach (\App\Models\Order::STATUS_LABELS as $status => $label)
+                                            <option value="{{ $status }}" @selected($order->status === $status)>{{ $label }}</option>
+                                        @endforeach
+                                    </select>
+                                    <button type="submit" class="btn btn-outline-secondary btn-sm text-nowrap">Sačuvaj</button>
+                                </form>
+                            </td>
+                            <td class="px-4 py-3 text-end text-nowrap">€{{ number_format($order->total, 2, ',', '.') }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center px-4 py-5">
+                                <span class="stat-icon mb-3" aria-hidden="true">▧</span>
+                                <h3 class="h6">Nema porudžbina za prikaz.</h3>
+                                <p class="small text-body-secondary mb-0">Porudžbine će se pojaviti nakon završetka checkout-a.</p>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+        @if ($orders->hasPages())
+            <div class="p-4 border-top">{{ $orders->links('pagination::bootstrap-5') }}</div>
+        @endif
     </section>
 @endsection

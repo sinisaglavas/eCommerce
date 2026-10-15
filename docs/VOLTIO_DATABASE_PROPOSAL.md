@@ -1,3 +1,57 @@
+[English](#english) | [Srpski](#srpski)
+
+<a id="english"></a>
+
+# Voltio — Database Proposal
+
+## Database proposal
+
+### Voltio • Laravel / MySQL • v1.0
+
+This is an implementation proposal for a central product catalog, separate brands, 2–4 images per published product, stock tracking, and numeric specification filters.
+
+### Decisions used throughout the proposal
+
+Each product belongs to one category and one brand. RAM, screen size, and other filterable values receive dedicated columns in `products`; descriptive extras may use JSON. Money is stored as integer cents with `_cents` column names and EUR as the catalog currency. Every sellable model has its own SKU, price, and stock row.
+
+### Table overview
+
+| Table | Purpose |
+| --- | --- |
+| users | Existing users and administrator access |
+| categories | Category names and presentation data |
+| brands | Brands, logos, and descriptions |
+| products | Shared product data, specifications, and stock |
+| product_images | Product gallery and image ordering |
+| user_addresses | Saved user addresses |
+| orders | Order and customer snapshot at purchase time |
+| order_items | Quantities and historical prices |
+
+The cart remains in the session as `product_id` and `quantity`. Prices are rechecked on the server. Tracking and cron jobs are outside v1.0.
+
+### Relationships and rules
+
+```text
+categories  1 ─── N products N ─── 1 brands
+products    1 ─── N product_images
+users       1 ─── N user_addresses
+users       1 ─── N orders
+orders      1 ─── N order_items
+products    1 ─── N order_items
+```
+
+Use `BIGINT UNSIGNED` IDs, matching foreign-key types, timestamps, and `snake_case` names. `NULL` means unknown or not applicable, not zero. Restrict deletion of categories and brands with products, cascade product images, preserve order history, and prefer inactive products or cancelled orders over physical deletion.
+
+Do not store derived values such as category product counts, discount percentages, or availability. Calculate them from relationships, prices, `is_active`, and stock. Store an order total as a historical calculation.
+
+### Category-specific specifications
+
+Keep common fields in `products` and use one-to-one tables for laptops, smartphones, televisions, monitors, tablets, and smartwatches. This keeps RAM, diagonal, storage, and similar filter values typed and searchable without a large table full of unrelated nullable columns.
+
+<a id="srpski"></a>
+
+## Srpski
+
 # Voltio — predlog baze podataka
 
 ## Predlog baze podataka

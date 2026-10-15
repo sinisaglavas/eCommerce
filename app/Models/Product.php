@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
@@ -19,6 +20,18 @@ class Product extends Model
     protected $with = ['brand', 'images'];
 
     protected $appends = ['old_price', 'image', 'gallery'];
+
+    protected $fillable = ['category_id', 'brand_id', 'name', 'description', 'price', 'compare_at_price', 'stock_quantity', 'warranty_months', 'badge', 'is_active', 'published_at'];
+
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            set: fn (string $value, array $attributes): array => [
+                'name' => $value,
+                'slug' => static::uniqueSlug($value, isset($attributes['id']) ? (int) $attributes['id'] : null),
+            ],
+        );
+    }
 
     protected function casts(): array
     {
@@ -134,5 +147,19 @@ class Product extends Model
                 ->mapWithKeys(fn ($value, string $key): array => [str($key)->replace('_', ' ')->title()->toString() => is_bool($value) ? ($value ? 'Yes' : 'No') : $value])
                 ->all();
         });
+    }
+
+    private static function uniqueSlug(string $name, ?int $ignoreId = null): string
+    {
+        $baseSlug = Str::slug($name);
+        $slug = $baseSlug;
+        $suffix = 2;
+
+        while (static::query()->where('slug', $slug)->when($ignoreId !== null, fn ($query) => $query->whereKeyNot($ignoreId))->exists()) {
+            $slug = $baseSlug.'-'.$suffix;
+            $suffix++;
+        }
+
+        return $slug;
     }
 }

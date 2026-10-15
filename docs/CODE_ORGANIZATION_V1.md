@@ -1,3 +1,56 @@
+[English](#english) | [Srpski](#srpski)
+
+<a id="english"></a>
+
+# Code Organization — Voltio v1.0
+
+This document is a shared guide for developing the Laravel eCommerce application in Docker. It describes recommended boundaries rather than claiming that every suggestion is already implemented.
+
+## Collaboration
+
+- The user writes the application code.
+- The assistant helps with explanations, organization proposals, and code review when requested.
+- The assistant changes application code or runs installations only after an explicit request.
+- Update this document when the team agrees on a new decision.
+
+## Scope of v1.0
+
+The storefront includes categories, products, price filtering, pagination, and product details. Category changes use JavaScript and avoid a full-page refresh. The catalog is database-backed and includes categories, brands, products, images, and category-specific specification tables. Wishlist data is persistent per user, while the cart is kept in the session.
+
+Version 1.0 covers registration and login, categories and products, the cart, orders, and the admin panel. Tracking and cron jobs remain outside the current scope.
+
+## General approach
+
+Use Laravel's standard structure. Do not add repositories, services, or a separate frontend project for simple operations. Extract logic only when it becomes complex or is repeated.
+
+## Controller responsibilities
+
+| Feature | Controller | Responsibility |
+| --- | --- | --- |
+| Catalog | `ProductController` | Product lists, category filters, prices, pagination, and details |
+| Wishlist | `WishlistController` | Wishlist display and AJAX add/remove operations |
+| Cart | `CartController` | Display, add, quantity changes, and removal |
+| Orders | `OrderController` | Creating orders and showing the user's orders |
+| Admin products | `Admin/ProductController` | Product management |
+| Admin categories | `Admin/CategoryController` | Category management |
+| Admin orders | `Admin/OrderController` | Order management |
+
+Keep registration and login separate from these controllers. A separate public category controller is enough when categories only filter the catalog.
+
+## Models and relationships
+
+The main models are `User`, `Category`, `Brand`, `Product`, `ProductImage`, the six category-specific detail models, `Wishlist`, `Order`, and `OrderItem`. A product belongs to one category and one brand. Shared fields stay in `products`; typed technical attributes belong in the matching one-to-one detail table. An order stores historical product names, unit prices, and quantities in its items.
+
+## Cart and order creation
+
+The cart and an order are separate concepts. A session cart can store product IDs and quantities until a persistent cross-device cart is needed. Wishlist entries belong to authenticated users and are protected by a unique `user_id`/`product_id` constraint.
+
+At checkout, the server rechecks products, quantities, current prices, and stock. It must not trust totals sent by JavaScript. Creating an order, its items, and stock changes belongs in a database transaction; extract a class such as `CreateOrder` when this workflow becomes complex.
+
+<a id="srpski"></a>
+
+## Srpski
+
 # Organizacija koda — Voltio v1.0
 
 Ovaj dokument je zajedničko uputstvo za razvoj jednostavne Laravel eCommerce aplikacije koja se pokreće u Docker-u. Predlozi su polazna tačka, a ne opis trenutno implementiranog koda.

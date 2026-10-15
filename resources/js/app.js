@@ -1,7 +1,7 @@
-import './updateContent';
 import './search';
 import './wishlist';
 import './cart';
+import './updateContent';
 
 document.addEventListener('click', (event) => {
     const thumbnail = event.target.closest('[data-product-gallery-thumbnail]');

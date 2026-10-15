@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Wishlist;
+use App\Services\CartService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -11,7 +12,7 @@ use Illuminate\View\View;
 
 class WishlistController extends Controller
 {
-    public function index(Request $request): View
+    public function index(Request $request, CartService $cartService): View
     {
         $products = Product::query()
             ->active()
@@ -20,8 +21,9 @@ class WishlistController extends Controller
             ->paginate(12);
 
         return view('wishlists.index', [
-            'title' => 'Wishlist – '. config('app.name'),
+            'title' => 'Wishlist – '.config('app.name'),
             'products' => $products,
+            'cartQuantities' => $cartService->quantities($request->session()),
         ]);
     }
 
