@@ -28,7 +28,10 @@ class WishlistTest extends TestCase
             ->assertJsonPath('wishlistItem.toggleUrl', route('wishlists.toggle', $product));
         $this->assertDatabaseHas('wishlists', ['user_id' => $user->id, 'product_id' => $product->id]);
         $this->get('/')->assertOk()->assertSee('data-wishlist-remove', false)->assertSee('data-product-id="'.$product->id.'"', false);
-        $this->get('/wishlist')->assertOk()->assertSee('Saved laptop');
+        $this->get('/wishlist')->assertOk()
+            ->assertSee('Saved laptop')
+            ->assertSee('Add to cart')
+            ->assertSee('Add selected to cart');
         $this->get('/products/'.$product->slug)->assertOk()->assertSee('Remove from wishlist');
         $this->postJson(route('wishlists.toggle', $product))->assertOk()
             ->assertJsonPath('wishlisted', false)->assertJsonPath('wishlistCount', 0);

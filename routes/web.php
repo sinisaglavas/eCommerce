@@ -20,7 +20,7 @@ Route::get('/search', SearchController::class)->name('search');
 Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
 Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-Route::post('/products/{product}/cart', [CartController::class, 'store'])->name('cart.store');
+Route::post('/products/{product}/cart', [CartController::class, 'store'])->middleware('auth')->name('cart.store');
 Route::patch('/cart/{product}', [CartController::class, 'update'])->name('cart.update');
 Route::delete('/cart/{product}', [CartController::class, 'destroy'])->name('cart.destroy');
 Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout.create');

@@ -1,5 +1,7 @@
 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
 
+const formatCurrency = (amount) => Number(amount).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
 const updateCartCount = (cartCount) => {
     document.querySelectorAll('[data-cart-item-count]').forEach((count) => {
         count.textContent = cartCount;
@@ -110,6 +112,7 @@ const updateCartForm = (form, isInCart) => {
     button.textContent = isInCart ? 'Remove from cart' : 'Add to cart';
     button.classList.toggle('btn-outline-light', isInCart);
     button.classList.toggle('btn-primary', !isInCart);
+    form.closest('.col')?.querySelector('[data-wishlist-select]')?.toggleAttribute('disabled', isInCart);
 };
 
 document.addEventListener('click', async (event) => {
@@ -179,5 +182,91 @@ document.addEventListener('submit', async (event) => {
         console.error('Cart update failed:', error);
     } finally {
         button.disabled = false;
+    }
+});
+
+document.addEventListener('change', async (event) => {
+    const form = event.target.closest('[data-cart-quantity-form]');
+    if (!form) {
+        return;
+    }
+
+    event.preventDefault();
+    const input = form.querySelector('[data-cart-quantity]');
+    const item = form.closest('[data-cart-item]');
+    input.disabled = true;
+
+    try {
+        const response = await fetch(form.action, {
+            method: 'PATCH',
+            headers: { Accept: 'application/json', 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
+            body: JSON.stringify({ quantity: input.value }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Unable to update cart quantity.');
+        }
+
+        const { cartCount, subtotal, total } = await response.json();
+        updateCartCount(cartCount);
+        item?.querySelector('[data-cart-subtotal]')?.replaceChildren(`€${formatCurrency(subtotal)}`);
+        document.querySelector('[data-cart-total]')?.replaceChildren(`€${formatCurrency(total)}`);
+    } catch (error) {
+        console.error('Cart quantity update failed:', error);
+        window.location.reload();
+    } finally {
+        input.disabled = false;
+    }
+});
+
+document.addEventListener('change', (event) => {
+    if (!event.target.matches('[data-wishlist-select]')) {
+        return;
+    }
+
+    const button = document.querySelector('[data-wishlist-add-selected]');
+    if (button) {
+        button.disabled = document.querySelectorAll('[data-wishlist-select]:checked').length === 0;
+    }
+});
+
+document.addEventListener('click', async (event) => {
+    const button = event.target.closest('[data-wishlist-add-selected]');
+    if (!button || button.disabled) {
+        return;
+    }
+
+    event.preventDefault();
+    button.disabled = true;
+    const selected = [...document.querySelectorAll('[data-wishlist-select]:checked')];
+
+    try {
+        for (const checkbox of selected) {
+            const card = checkbox.closest('.col');
+            const response = await fetch(checkbox.dataset.cartUrl, {
+                method: 'POST',
+                headers: { Accept: 'application/json', 'X-CSRF-TOKEN': csrfToken },
+            });
+
+            if (!response.ok) {
+                throw new Error('Unable to add selected products to cart.');
+            }
+
+            const { cartCount, cartItem } = await response.json();
+            updateCartCount(cartCount);
+            updateCartDropdown(cartItem);
+            const form = card?.querySelector('[data-cart-form]');
+            if (form) {
+                updateCartForm(form, true);
+            }
+        }
+
+        selected.forEach((checkbox) => {
+            checkbox.checked = false;
+        });
+    } catch (error) {
+        console.error('Selected cart update failed:', error);
+    } finally {
+        button.disabled = true;
     }
 });

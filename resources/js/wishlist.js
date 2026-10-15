@@ -35,11 +35,21 @@ const updateWishlistButton = (productId, wishlisted) => {
         }
 
         button.dataset.wishlisted = String(wishlisted);
-        button.querySelector('[data-wishlist-label]').textContent = wishlisted
-            ? 'Remove from wishlist'
-            : 'Add to wishlist';
-        button.classList.toggle('btn-outline-light', !wishlisted);
-        button.classList.toggle('btn-light', wishlisted);
+        button.setAttribute('aria-pressed', String(wishlisted));
+        const label = button.querySelector('[data-wishlist-label]');
+
+        if (label) {
+            label.textContent = wishlisted
+                ? 'Remove from wishlist'
+                : 'Add to wishlist';
+            button.classList.toggle('btn-outline-light', !wishlisted);
+            button.classList.toggle('btn-light', wishlisted);
+        }
+
+        if (button.classList.contains('product-wishlist-btn')) {
+            button.classList.toggle('is-active', wishlisted);
+            button.setAttribute('aria-label', wishlisted ? 'Remove from wishlist' : 'Add to wishlist');
+        }
     });
 };
 
@@ -159,7 +169,10 @@ document.addEventListener('click', async (event) => {
         updateWishlistDropdown(wishlisted, productId, wishlistItem);
     } catch (error) {
         console.error('JS Greška:', error);
-        button.querySelector('[data-wishlist-label]').textContent = 'Try again';
+        const label = button.querySelector('[data-wishlist-label]');
+        if (label) {
+            label.textContent = 'Try again';
+        }
     } finally {
         button.disabled = false;
     }

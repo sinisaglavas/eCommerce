@@ -47,11 +47,24 @@ class CartController extends Controller
         return redirect()->route('cart.index')->with('success', 'Product added to your cart.');
     }
 
-    public function update(Request $request, Product $product, CartService $cartService): RedirectResponse
+    public function update(Request $request, Product $product, CartService $cartService): RedirectResponse|JsonResponse
     {
         abort_unless($product->is_active && $product->stock_quantity > 0, 404);
         $validated = $request->validate(['quantity' => ['required', 'integer', 'min:1', 'max:'.$product->stock_quantity]]);
         $cartService->update($request->session(), $product, $validated['quantity']);
+
+        if ($request->expectsJson()) {
+            $quantities = $cartService->quantities($request->session());
+            $products = Product::query()->active()->whereKey(array_keys($quantities))->get();
+            $total = $products->sum(fn (Product $cartProduct): float => (float) $cartProduct->price * ($quantities[$cartProduct->id] ?? 0));
+
+            return response()->json([
+                'cartCount' => $cartService->count($request->session()),
+                'quantity' => $quantities[$product->id],
+                'subtotal' => (float) $product->price * $quantities[$product->id],
+                'total' => $total,
+            ]);
+        }
 
         return redirect()->route('cart.index')->with('success', 'Cart updated.');
     }

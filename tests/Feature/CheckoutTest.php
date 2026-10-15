@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -16,6 +17,7 @@ class CheckoutTest extends TestCase
     {
         $this->withoutVite();
         $this->withoutMiddleware(PreventRequestForgery::class);
+        $this->actingAs(User::factory()->create());
         $product = Product::factory()->create(['name' => 'Checkout laptop', 'price' => 499.99, 'stock_quantity' => 3]);
         $this->post(route('cart.store', $product));
 
@@ -33,6 +35,7 @@ class CheckoutTest extends TestCase
     {
         $this->withoutVite();
         $this->withoutMiddleware(PreventRequestForgery::class);
+        $this->actingAs(User::factory()->create());
         $product = Product::factory()->create(['stock_quantity' => 3]);
         $this->post(route('cart.store', $product));
 

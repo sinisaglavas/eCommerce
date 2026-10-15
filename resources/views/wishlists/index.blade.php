@@ -21,9 +21,34 @@
               <a href="{{ route('home') }}" class="btn btn-primary align-self-center" data-ajax-link data-update-target="#page-content">Browse products</a>
             </div>
           @else
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-4">
+            <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap mb-4 p-3 rounded-3 border bg-surface-2">
+              <div>
+                <p class="small fw-semibold mb-1">Odaberite proizvode</p>
+                <p class="small text-secondary mb-0">Dodajte jedan ili više sačuvanih proizvoda u korpu.</p>
+              </div>
+              <button type="button" class="btn btn-primary" data-wishlist-add-selected disabled>
+                Add selected to cart
+              </button>
+            </div>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-4 gy-5">
               @foreach ($products as $product)
-                <div class="col">@include('partials.product-card', ['product' => $product])</div>
+                <div class="col">
+                  @include('partials.product-card', ['product' => $product])
+                  @php($isInCart = ($cartQuantities[$product->id] ?? 0) > 0)
+                  <div class="d-flex align-items-center justify-content-between gap-2 mt-2 px-1">
+                    <label class="form-check d-flex align-items-center gap-2 mb-0 small text-secondary">
+                      <input class="form-check-input mt-0" type="checkbox" value="{{ $product->id }}" data-wishlist-select data-cart-url="{{ route('cart.store', $product) }}" aria-label="Select {{ $product->name }}" @disabled($isInCart)>
+                      Select product
+                    </label>
+                    <form method="POST" action="{{ $isInCart ? route('cart.destroy', $product) : route('cart.store', $product) }}" class="d-inline" data-cart-form data-cart-in-cart="{{ $isInCart ? 'true' : 'false' }}" data-cart-add-url="{{ route('cart.store', $product) }}" data-cart-remove-url="{{ route('cart.destroy', $product) }}">
+                      @csrf
+                      @if ($isInCart)
+                        @method('DELETE')
+                      @endif
+                      <button type="submit" class="btn btn-{{ $isInCart ? 'outline-light' : 'outline-primary' }} btn-sm text-nowrap" data-cart-button>{{ $isInCart ? 'Remove from cart' : 'Add to cart' }}</button>
+                    </form>
+                  </div>
+                </div>
               @endforeach
             </div>
             <div class="mt-4">{{ $products->links() }}</div>

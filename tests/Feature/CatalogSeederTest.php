@@ -34,7 +34,7 @@ class CatalogSeederTest extends TestCase
             $this->assertTrue($product->compare_at_price === null || $product->compare_at_price > $product->price);
             foreach ($product->images as $image) {
                 $this->assertFileExists(public_path(ltrim($image->path, '/')));
-                $this->assertNotFalse(simplexml_load_file(public_path(ltrim($image->path, '/'))));
+                $this->assertNotFalse(getimagesize(public_path(ltrim($image->path, '/'))));
             }
         }
         $admin = User::where('email', 'admin@voltio.test')->firstOrFail();

@@ -11,7 +11,7 @@
       @endif
     </div>
 
-    <button type="button" class="product-wishlist-btn" data-wishlist-toggle aria-label="Add {{ $product->name }} to wishlist">
+    <button type="button" class="product-wishlist-btn" @auth data-wishlist-button data-product-id="{{ $product->id }}" data-wishlist-url="{{ route('wishlists.toggle', $product) }}" data-wishlisted="false" aria-pressed="false" @else data-login-required="wishlist" onclick="event.preventDefault(); event.stopPropagation(); window.showLoginRequiredNotice('wishlist');" @endauth aria-label="Add {{ $product->name }} to wishlist">
       <svg class="ico"><use href="#i-heart"/></svg>
     </button>
 
