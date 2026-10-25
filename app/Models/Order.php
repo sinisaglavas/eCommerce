@@ -21,6 +21,14 @@ class Order extends Model
         'pending' => 'Pending',
     ];
 
+    public const array PAYMENT_STATUS_LABELS = [
+        'unpaid' => 'Unpaid',
+        'pending' => 'Payment Pending',
+        'paid' => 'Paid',
+        'failed' => 'Payment Failed',
+        'refunded' => 'Refunded',
+    ];
+
     private const array STATUS_TRANSITIONS = [
         'awaiting_payment' => ['paid', 'cancelled', 'payment_failed'],
         'paid' => ['processing', 'cancelled'],
@@ -36,13 +44,20 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'number', 'status', 'first_name', 'last_name', 'email', 'phone',
-        'address_line_1', 'address_line_2', 'city', 'postal_code', 'country', 'total',
+        'user_id', 'number', 'status', 'payment_status', 'payment_method', 'tracking_number',
+        'shipping_carrier', 'estimated_delivery_at', 'shipped_at', 'delivered_at',
+        'first_name', 'last_name', 'email', 'phone', 'address_line_1', 'address_line_2',
+        'city', 'postal_code', 'country', 'total',
     ];
 
     protected function casts(): array
     {
-        return ['total' => 'decimal:2'];
+        return [
+            'total' => 'decimal:2',
+            'estimated_delivery_at' => 'datetime',
+            'shipped_at' => 'datetime',
+            'delivered_at' => 'datetime',
+        ];
     }
 
     public function user(): BelongsTo
@@ -63,6 +78,11 @@ class Order extends Model
     public function statusLabel(): string
     {
         return self::STATUS_LABELS[$this->status] ?? str($this->status)->headline()->toString();
+    }
+
+    public function paymentStatusLabel(): string
+    {
+        return self::PAYMENT_STATUS_LABELS[$this->payment_status] ?? str($this->payment_status)->headline()->toString();
     }
 
     public function canTransitionTo(string $status): bool

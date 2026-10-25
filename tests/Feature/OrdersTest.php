@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Carbon;
 use Tests\TestCase;
 
 class OrdersTest extends TestCase
@@ -57,5 +58,25 @@ class OrdersTest extends TestCase
         $order = Order::factory()->create();
 
         $this->actingAs($user)->get(route('orders.show', $order))->assertNotFound();
+    }
+
+    public function test_order_stores_separate_payment_and_shipping_data(): void
+    {
+        $order = Order::factory()->create([
+            'payment_status' => 'paid',
+            'payment_method' => 'cash_on_delivery',
+            'tracking_number' => 'TRACK-123',
+            'shipping_carrier' => 'Voltio Express',
+            'estimated_delivery_at' => now()->addDays(3),
+        ]);
+
+        $this->assertSame('Paid', $order->paymentStatusLabel());
+        $this->assertInstanceOf(Carbon::class, $order->estimated_delivery_at);
+        $this->assertDatabaseHas('orders', [
+            'id' => $order->id,
+            'payment_status' => 'paid',
+            'tracking_number' => 'TRACK-123',
+            'shipping_carrier' => 'Voltio Express',
+        ]);
     }
 }

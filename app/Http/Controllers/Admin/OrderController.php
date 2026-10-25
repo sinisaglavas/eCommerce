@@ -34,7 +34,15 @@ class OrderController extends Controller
         $previousStatus = $order->status;
 
         if ($previousStatus !== $validated['status']) {
-            $order->update(['status' => $validated['status']]);
+            $updates = ['status' => $validated['status']];
+
+            if ($validated['status'] === 'paid') {
+                $updates['payment_status'] = 'paid';
+            } elseif ($validated['status'] === 'payment_failed') {
+                $updates['payment_status'] = 'failed';
+            }
+
+            $order->update($updates);
             $order->statusHistories()->create([
                 'from_status' => $previousStatus,
                 'to_status' => $order->status,

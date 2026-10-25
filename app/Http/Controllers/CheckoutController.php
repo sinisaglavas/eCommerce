@@ -54,6 +54,7 @@ class CheckoutController extends Controller
                 'user_id' => $request->user()?->id,
                 'number' => 'ORD-'.Str::upper(Str::random(10)),
                 'status' => 'awaiting_payment',
+                'payment_status' => 'unpaid',
                 'total' => $cartItems->sum('subtotal'),
             ]);
 
