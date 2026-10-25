@@ -36,6 +36,13 @@ class OrdersTest extends TestCase
         $this->withoutVite();
         $user = User::factory()->create();
         $order = Order::factory()->for($user)->create(['status' => 'shipped']);
+        $order->update([
+            'payment_status' => 'paid',
+            'tracking_number' => 'TRACK-ORDER-1',
+            'shipping_carrier' => 'Voltio Express',
+            'estimated_delivery_at' => now()->addDays(2),
+            'shipped_at' => now(),
+        ]);
         OrderItem::factory()->for($order)->create(['product_name' => 'Tracking laptop', 'quantity' => 2]);
         $order->statusHistories()->createMany([
             ['to_status' => 'awaiting_payment', 'created_at' => now()->subDays(2), 'updated_at' => now()->subDays(2)],
@@ -48,6 +55,9 @@ class OrdersTest extends TestCase
             ->assertSee($order->number)
             ->assertSee('Tracking laptop')
             ->assertSee('Shipped')
+            ->assertSee('Paid')
+            ->assertSee('TRACK-ORDER-1')
+            ->assertSee('Voltio Express')
             ->assertSee('Order progress');
     }
 

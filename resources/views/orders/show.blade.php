@@ -9,7 +9,10 @@
                     <h1 class="h2 fw-bold section-title mt-2 mb-1">Track order {{ $order->number }}</h1>
                     <p class="text-secondary mb-0">Placed {{ $order->created_at->format('d M Y, H:i') }}</p>
                 </div>
-                <span class="badge rounded-pill text-bg-warning fs-6 px-3 py-2">{{ $order->statusLabel() }}</span>
+                <div class="d-flex flex-wrap justify-content-end gap-2">
+                    <span class="badge rounded-pill text-bg-warning fs-6 px-3 py-2">{{ $order->statusLabel() }}</span>
+                    <span class="badge rounded-pill text-bg-secondary fs-6 px-3 py-2">{{ $order->paymentStatusLabel() }}</span>
+                </div>
             </div>
 
             <div class="row g-4">
@@ -52,7 +55,15 @@
                                 <dd class="col-7">{{ $order->tracking_number }}</dd>
                                 @if ($order->estimated_delivery_at)
                                     <dt class="col-5 text-secondary">Estimated delivery</dt>
-                                    <dd class="col-7 mb-0">{{ $order->estimated_delivery_at->format('d M Y') }}</dd>
+                                    <dd class="col-7">{{ $order->estimated_delivery_at->format('d M Y') }}</dd>
+                                @endif
+                                @if ($order->shipped_at)
+                                    <dt class="col-5 text-secondary">Shipped</dt>
+                                    <dd class="col-7">{{ $order->shipped_at->format('d M Y, H:i') }}</dd>
+                                @endif
+                                @if ($order->delivered_at)
+                                    <dt class="col-5 text-secondary">Delivered</dt>
+                                    <dd class="col-7 mb-0">{{ $order->delivered_at->format('d M Y, H:i') }}</dd>
                                 @endif
                             </dl>
                         @else
@@ -72,6 +83,7 @@
                             <span>Total</span>
                             <strong>€{{ number_format($order->total, 2, ',', '.') }}</strong>
                         </div>
+                        <p class="small text-secondary mt-3 mb-0">Payment status: {{ $order->paymentStatusLabel() }}</p>
                     </section>
 
                     <section class="card border p-4" aria-labelledby="delivery-title">
