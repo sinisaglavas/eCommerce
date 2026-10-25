@@ -31,7 +31,16 @@ class OrderController extends Controller
             return back()->withErrors(['status' => 'Ova promena statusa nije dozvoljena.']);
         }
 
-        $order->update(['status' => $validated['status']]);
+        $previousStatus = $order->status;
+
+        if ($previousStatus !== $validated['status']) {
+            $order->update(['status' => $validated['status']]);
+            $order->statusHistories()->create([
+                'from_status' => $previousStatus,
+                'to_status' => $order->status,
+                'note' => 'Status updated by administrator',
+            ]);
+        }
 
         return back()->with('status', 'Status porudžbine je uspešno izmenjen.');
     }

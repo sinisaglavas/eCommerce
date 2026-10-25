@@ -21,4 +21,18 @@ class OrderController extends Controller
             'orders' => $orders,
         ]);
     }
+
+    public function show(Request $request, Order $order): View
+    {
+        $order = Order::query()
+            ->whereBelongsTo($request->user())
+            ->with(['items', 'statusHistories'])
+            ->findOrFail($order->id);
+
+        return view('orders.show', [
+            'title' => 'Order '.$order->number.' – '.config('app.name'),
+            'order' => $order,
+            'statusLabels' => Order::STATUS_LABELS,
+        ]);
+    }
 }

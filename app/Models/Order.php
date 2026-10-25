@@ -55,6 +55,16 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    public function statusHistories(): HasMany
+    {
+        return $this->hasMany(OrderStatusHistory::class)->oldest();
+    }
+
+    public function statusLabel(): string
+    {
+        return self::STATUS_LABELS[$this->status] ?? str($this->status)->headline()->toString();
+    }
+
     public function canTransitionTo(string $status): bool
     {
         return $status === $this->status
