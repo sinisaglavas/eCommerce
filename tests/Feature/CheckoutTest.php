@@ -29,7 +29,7 @@ class CheckoutTest extends TestCase
         $this->assertDatabaseHas('order_items', ['order_id' => $order->id, 'product_id' => $product->id, 'quantity' => 1, 'unit_price' => 499.99]);
         $this->assertDatabaseHas('order_status_histories', ['order_id' => $order->id, 'to_status' => 'awaiting_payment', 'from_status' => null]);
         $response->assertSessionMissing('cart');
-        $this->get(route('checkout.success', $order))->assertOk()->assertSee('Order saved successfully')->assertSee('payment details by email')->assertSee('My orders');
+        $this->get(route('checkout.success', $order))->assertOk()->assertSee('Order saved successfully')->assertSee('payment details by email')->assertSee('Track order')->assertSee('My orders');
     }
 
     public function test_checkout_requires_contact_and_delivery_information(): void
