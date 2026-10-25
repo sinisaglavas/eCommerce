@@ -54,8 +54,7 @@
                             </td>
                             <td class="py-3">
                                 <div class="d-flex flex-wrap gap-2" style="min-width: 330px">
-                                    <label class="visually-hidden" for="tracking-number-{{ $order->id }}">Tracking broj {{ $order->number }}</label>
-                                    <input id="tracking-number-{{ $order->id }}" form="order-update-{{ $order->id }}" name="tracking_number" value="{{ $order->tracking_number }}" class="form-control form-control-sm bg-body" style="width: 145px" placeholder="Tracking broj">
+                                    <span class="small text-body-secondary align-self-center" style="width: 145px">{{ $order->tracking_number ?: 'Generiše se pri slanju' }}</span>
                                     <label class="visually-hidden" for="shipping-carrier-{{ $order->id }}">Dostavna služba {{ $order->number }}</label>
                                     <input id="shipping-carrier-{{ $order->id }}" form="order-update-{{ $order->id }}" name="shipping_carrier" value="{{ $order->shipping_carrier }}" class="form-control form-control-sm bg-body" style="width: 145px" placeholder="Dostavna služba">
                                     <label class="visually-hidden" for="delivery-date-{{ $order->id }}">Procenjena isporuka {{ $order->number }}</label>

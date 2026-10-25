@@ -25,7 +25,6 @@ class OrderController extends Controller
     {
         $validated = $request->validate([
             'status' => ['required', 'string', 'in:'.implode(',', array_keys(Order::STATUS_LABELS))],
-            'tracking_number' => ['nullable', 'string', 'max:100'],
             'shipping_carrier' => ['nullable', 'string', 'max:100'],
             'estimated_delivery_at' => ['nullable', 'date'],
             'note' => ['nullable', 'string', 'max:255'],
@@ -37,7 +36,6 @@ class OrderController extends Controller
 
         $previousStatus = $order->status;
         $updates = [
-            'tracking_number' => $validated['tracking_number'] ?? null,
             'shipping_carrier' => $validated['shipping_carrier'] ?? null,
             'estimated_delivery_at' => $validated['estimated_delivery_at'] ?? null,
         ];
@@ -53,6 +51,10 @@ class OrderController extends Controller
 
             if ($validated['status'] === 'shipped' && $order->shipped_at === null) {
                 $updates['shipped_at'] = now();
+
+                if ($order->tracking_number === null) {
+                    $updates['tracking_number'] = Order::generateTrackingNumber();
+                }
             }
 
             if ($validated['status'] === 'completed' && $order->delivered_at === null) {
