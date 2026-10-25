@@ -42,6 +42,23 @@
                 </div>
 
                 <div class="col-lg-5">
+                    <section class="card border p-4 mb-4" aria-labelledby="shipping-title">
+                        <h2 id="shipping-title" class="h4 fw-semibold mb-3">Shipping</h2>
+                        @if ($order->tracking_number)
+                            <dl class="row small mb-0">
+                                <dt class="col-5 text-secondary">Carrier</dt>
+                                <dd class="col-7">{{ $order->shipping_carrier ?: '—' }}</dd>
+                                <dt class="col-5 text-secondary">Tracking number</dt>
+                                <dd class="col-7">{{ $order->tracking_number }}</dd>
+                                @if ($order->estimated_delivery_at)
+                                    <dt class="col-5 text-secondary">Estimated delivery</dt>
+                                    <dd class="col-7 mb-0">{{ $order->estimated_delivery_at->format('d M Y') }}</dd>
+                                @endif
+                            </dl>
+                        @else
+                            <p class="text-secondary small mb-0">Tracking details will appear here after the order is shipped.</p>
+                        @endif
+                    </section>
                     <section class="card border p-4 mb-4" aria-labelledby="summary-title">
                         <h2 id="summary-title" class="h4 fw-semibold mb-3">Order summary</h2>
                         @foreach ($order->items as $item)
