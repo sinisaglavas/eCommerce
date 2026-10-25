@@ -69,7 +69,7 @@
             <div class="mt-auto pt-4 d-none d-lg-block">
                 <div class="border-top pt-3 px-3">
                     <p class="small text-body-secondary mb-1">Upravljanje prodavnicom</p>
-                    <span class="eyebrow">VERZIJA 1.0</span>
+                    <span class="eyebrow">VERZIJA 2.0</span>
                 </div>
             </div>
         </div>

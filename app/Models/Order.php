@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Order extends Model
 {
@@ -83,6 +84,15 @@ class Order extends Model
     public function paymentStatusLabel(): string
     {
         return self::PAYMENT_STATUS_LABELS[$this->payment_status] ?? str($this->payment_status)->headline()->toString();
+    }
+
+    public static function generateTrackingNumber(): string
+    {
+        do {
+            $trackingNumber = 'VLT-'.Str::upper(Str::random(12));
+        } while (self::query()->where('tracking_number', $trackingNumber)->exists());
+
+        return $trackingNumber;
     }
 
     public function canTransitionTo(string $status): bool

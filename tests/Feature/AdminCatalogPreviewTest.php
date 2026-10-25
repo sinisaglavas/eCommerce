@@ -51,7 +51,6 @@ class AdminCatalogPreviewTest extends TestCase
         $this->get('/admin/orders')->assertOk()->assertSee('ORD-RECENT-1001')->assertSee('Awaiting Payment');
         $this->patch(route('admin.orders.status', $order), [
             'status' => 'paid',
-            'tracking_number' => 'TRACK-1001',
             'shipping_carrier' => 'Voltio Express',
             'estimated_delivery_at' => '2026-11-01',
             'note' => 'Payment confirmed.',
@@ -61,7 +60,6 @@ class AdminCatalogPreviewTest extends TestCase
         $this->assertDatabaseHas('orders', [
             'id' => $order->id,
             'payment_status' => 'paid',
-            'tracking_number' => 'TRACK-1001',
             'shipping_carrier' => 'Voltio Express',
         ]);
         $this->assertDatabaseHas('order_status_histories', [
@@ -69,6 +67,29 @@ class AdminCatalogPreviewTest extends TestCase
             'to_status' => 'paid',
             'note' => 'Payment confirmed.',
         ]);
+    }
+
+    public function test_admin_generates_a_unique_tracking_number_when_shipping_an_order(): void
+    {
+        $this->actingAs(User::factory()->create(['is_admin' => true]));
+        $firstOrder = Order::factory()->create(['status' => 'processing']);
+        $secondOrder = Order::factory()->create(['status' => 'processing']);
+
+        $this->patch(route('admin.orders.status', $firstOrder), [
+            'status' => 'shipped',
+            'shipping_carrier' => 'Voltio Express',
+        ])->assertRedirect();
+        $this->patch(route('admin.orders.status', $secondOrder), [
+            'status' => 'shipped',
+            'shipping_carrier' => 'Voltio Express',
+        ])->assertRedirect();
+
+        $firstOrder->refresh();
+        $secondOrder->refresh();
+        $this->assertMatchesRegularExpression('/^VLT-[A-Z0-9]{12}$/', $firstOrder->tracking_number);
+        $this->assertNotSame($firstOrder->tracking_number, $secondOrder->tracking_number);
+        $this->assertNotNull($firstOrder->shipped_at);
+        $this->assertNotNull($secondOrder->shipped_at);
     }
 
     public function test_empty_database_and_orders_page_do_not_show_demo_data(): void
