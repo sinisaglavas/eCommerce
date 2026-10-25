@@ -49,9 +49,26 @@ class AdminCatalogPreviewTest extends TestCase
             ->assertSee('ORD-RECENT-1001')
             ->assertSee('Awaiting Payment');
         $this->get('/admin/orders')->assertOk()->assertSee('ORD-RECENT-1001')->assertSee('Awaiting Payment');
-        $this->patch(route('admin.orders.status', $order), ['status' => 'paid'])
+        $this->patch(route('admin.orders.status', $order), [
+            'status' => 'paid',
+            'tracking_number' => 'TRACK-1001',
+            'shipping_carrier' => 'Voltio Express',
+            'estimated_delivery_at' => '2026-11-01',
+            'note' => 'Payment confirmed.',
+        ])
             ->assertRedirect();
         $this->assertDatabaseHas('orders', ['id' => $order->id, 'status' => 'paid']);
+        $this->assertDatabaseHas('orders', [
+            'id' => $order->id,
+            'payment_status' => 'paid',
+            'tracking_number' => 'TRACK-1001',
+            'shipping_carrier' => 'Voltio Express',
+        ]);
+        $this->assertDatabaseHas('order_status_histories', [
+            'order_id' => $order->id,
+            'to_status' => 'paid',
+            'note' => 'Payment confirmed.',
+        ]);
     }
 
     public function test_empty_database_and_orders_page_do_not_show_demo_data(): void
