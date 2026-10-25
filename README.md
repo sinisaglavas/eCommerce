@@ -18,10 +18,10 @@ The project is in development. The Docker development environment is running, an
 
 ## Version 2.0 — Additional Features
 
-Version 2.0 will include all features from Version 1.0 and add:
+Version 2.0 includes all features from Version 1.0 and adds:
 
-- **Tracking:** Introduce tracking functionality. The exact scope will be defined during Version 2.0 planning.
-- **Cron Jobs:** Add scheduled tasks to automate recurring application operations. Specific tasks will be defined during Version 2.0 planning.
+- **Tracking:** Customers can view status history, payment status, shipping details, and delivery dates for their orders.
+- **Cron Jobs:** The hourly `orders:expire-unpaid` command marks unpaid orders older than 48 hours as payment failed.
 
 ## Development Environment
 
@@ -50,6 +50,16 @@ docker compose -f compose.dev.yaml ps -a
 ```bash
 docker compose -f compose.dev.yaml stop
 ```
+### Run the scheduler locally
+
+Keep the scheduler running in a separate workspace terminal:
+
+```bash
+docker compose -f compose.dev.yaml exec workspace php artisan schedule:work
+```
+
+See [docs/CRON_JOBS.md](docs/CRON_JOBS.md) for command details, tests, and production setup.
+
 ### Refresh migration + re-seeder initialization
 ```bash
 docker compose -f compose.dev.yaml run --rm workspace php artisan migrate:fresh --seed
