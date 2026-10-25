@@ -4,7 +4,7 @@ A Laravel application for reserving and purchasing products. Customers will be a
 
 ## Project Status
 
-The project is in development. The Docker development environment is running, and the features below represent the planned roadmap.
+The project is in development. The Docker development environment is running, and the features below describe the current release scope.
 
 ## Version 1.0 — Core Features
 
