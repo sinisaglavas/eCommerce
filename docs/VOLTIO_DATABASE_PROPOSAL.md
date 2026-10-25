@@ -27,7 +27,7 @@ Each product belongs to one category and one brand. RAM, screen size, and other 
 | orders | Order and customer snapshot at purchase time |
 | order_items | Quantities and historical prices |
 
-The cart remains in the session as `product_id` and `quantity`. Prices are rechecked on the server. Tracking and cron jobs are outside v1.0.
+The cart remains in the session as `product_id` and `quantity`. Prices are rechecked on the server. Tracking and cron jobs are implemented in v2.0.
 
 ### Relationships and rules
 
@@ -83,7 +83,7 @@ Svaki prodajni model ima svoj SKU i red u products. Laptop sa 16 GB i isti model
 
 Korpa ostaje u sesiji: product_id i quantity. Cene se ponovo proveravaju na serveru. Korpa između uređaja zahteva dodatne tabele i nije pretpostavka ovog predloga.
 
-Tracking i cron job ostaju za v2.0. Predlog obuhvata podatke za status plaćanja, ali izbor online procesora plaćanja još nije dogovoren.
+Tracking i cron job su implementirani u v2.0. Predlog obuhvata podatke za status plaćanja, ali izbor online procesora plaćanja još nije dogovoren.
 
 ## Veze, nazivi i osnovna pravila
 

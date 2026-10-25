@@ -17,7 +17,7 @@ This document is a shared guide for developing the Laravel eCommerce application
 
 The storefront includes categories, products, price filtering, pagination, and product details. Category changes use JavaScript and avoid a full-page refresh. The catalog is database-backed and includes categories, brands, products, images, and category-specific specification tables. Wishlist data is persistent per user, while the cart is kept in the session.
 
-Version 1.0 covers registration and login, categories and products, the cart, orders, and the admin panel. Tracking and cron jobs remain outside the current scope.
+Version 1.0 covers registration and login, categories and products, the cart, orders, and the admin panel. Tracking and cron jobs are implemented in v2.0.
 
 ## General approach
 
@@ -76,7 +76,7 @@ Katalog je sada povezan sa bazom: postoje kategorije, brendovi, proizvodi, slike
 - Moje kupovine.
 - Admin panel.
 
-Tracking i cron job ostaju za v2.0. Za sada ne uvoditi dodatne slojeve samo zbog buduće verzije.
+Tracking i cron job su implementirani u v2.0. Nove slojeve uvoditi samo kada ih opravda složenost funkcionalnosti.
 
 ## Osnovni pristup
 
