@@ -66,6 +66,11 @@ class CheckoutController extends Controller
                 'line_total' => $cartItem['subtotal'],
             ])->all());
 
+            $order->statusHistories()->create([
+                'to_status' => $order->status,
+                'note' => 'Order created',
+            ]);
+
             $cartService->clear($request->session());
 
             return $order;

@@ -27,6 +27,7 @@ Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout.c
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 Route::get('/checkout/success/{order}', [CheckoutController::class, 'success'])->name('checkout.success');
 Route::get('/orders', [OrderController::class, 'index'])->middleware('auth')->name('orders.index');
+Route::get('/orders/{order}', [OrderController::class, 'show'])->middleware('auth')->name('orders.show');
 Route::get('/wishlist', [WishlistController::class, 'index'])->middleware('auth')->name('wishlists.index');
 Route::post('/products/{product}/wishlist', [WishlistController::class, 'toggle'])->middleware('auth')->name('wishlists.toggle');
 
