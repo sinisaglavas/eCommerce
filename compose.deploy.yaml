@@ -1,0 +1,74 @@
+services:
+  web:
+    image: sinisaglavas/voltio-web:latest
+    restart: unless-stopped
+    volumes:
+      - laravel-storage-production:/var/www/storage:ro
+      - laravel-public-assets:/var/www/public/build:ro
+    networks:
+      - laravel-production
+    ports:
+      - "${NGINX_PORT:-80}:80"
+    depends_on:
+      php-fpm:
+        condition: service_healthy
+
+  php-fpm:
+    image: sinisaglavas/voltio-php-fpm:latest
+    restart: unless-stopped
+    volumes:
+      - laravel-public-assets:/var/www/public/build
+      - laravel-storage-production:/var/www/storage
+    networks:
+      - laravel-production
+    env_file:
+      - .env
+    healthcheck:
+      test: [ "CMD-SHELL", "php-fpm-healthcheck || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  migrate:
+    image: sinisaglavas/voltio-php-fpm:latest
+    working_dir: /var/www
+    command: php artisan migrate --force
+    env_file:
+      - .env
+    networks:
+      - laravel-production
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: "no"
+
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - mysql-data-production:/var/lib/mysql
+    networks:
+      - laravel-production
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+networks:
+  laravel-production:
+
+volumes:
+  mysql-data-production:
+  laravel-storage-production:
+  laravel-public-assets:

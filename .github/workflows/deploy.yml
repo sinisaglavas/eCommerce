@@ -1,0 +1,58 @@
+
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - master
+
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Preuzimanje koda iz GitHub repozitorijuma
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Prijava na Docker Hub koristeći Secrets
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # 3. Automatski Build i Push za PHP-FPM sliku
+      - name: Build and Push PHP-FPM Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./docker/common/php-fpm/Dockerfile
+          target: production
+          push: true
+          tags: sinisaglavas/voltio-php-fpm:latest
+
+      # 4. Automatski Build i Push za Web/Nginx sliku
+      - name: Build and Push Nginx Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./docker/production/nginx/Dockerfile
+          push: true
+          tags: sinisaglavas/voltio-web:latest
+
+  deploy:
+    needs: build-and-push
+    runs-on: self-hosted
+
+    steps:
+      - name: Deploy application on VM
+        run: |
+          cd /home/devops/eCommerce
+          docker compose -f compose.deploy.yaml pull
+          docker compose -f compose.deploy.yaml up -d --remove-orphans
+          docker compose -f compose.deploy.yaml exec -T php-fpm php artisan optimize:clear
+          docker compose -f compose.deploy.yaml exec -T php-fpm php artisan view:clear
+          docker compose -f compose.deploy.yaml ps
