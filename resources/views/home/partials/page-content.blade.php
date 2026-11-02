@@ -43,7 +43,7 @@
         <span class="badge rounded-pill glass-badge align-self-start px-3 py-2 mb-3 d-inline-flex align-items-center gap-2">
           <svg class="ico" style="color:#fbbf24"><use href="#i-sparkle"/></svg> New collection 2026
         </span>
-        <h1 class="fw-bold mb-3" style="max-width:520px">Technology that keeps up with you</h1>
+        <h1 class="fw-bold mb-3" style="max-width:520px">Technology that keeps up with youu</h1>
         <p class="fs-5 mb-4" style="color:#cbd5e1; max-width:440px">The latest laptops, phones, tablets and smartwatches at the best prices. Up to 24 interest-free installments.</p>
         <a href="#categories" class="btn btn-light btn-lg fw-semibold align-self-start rounded-3 px-4 d-inline-flex align-items-center gap-2">
           Browse categories <svg class="ico"><use href="#i-arrow"/></svg>
