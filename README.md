@@ -69,6 +69,29 @@ See [docs/CRON_JOBS.md](docs/CRON_JOBS.md) for command details, tests, and produ
 docker compose -f compose.dev.yaml run --rm workspace php artisan migrate:fresh --seed
 ```
 
+### Restore Product Images on Another Computer
+
+After cloning the repository, configuring `.env`, and starting the development environment, run:
+
+```bash
+docker compose -f compose.dev.yaml exec workspace composer install --no-interaction
+docker compose -f compose.dev.yaml exec workspace php artisan migrate --seed --no-interaction
+docker compose -f compose.dev.yaml exec workspace php artisan storage:link --no-interaction
+docker compose -f compose.dev.yaml up -d php-fpm web
+```
+
+Use `APP_ENV=local` in `.env` because demo seeders only run in local and testing environments. Unlike `migrate:fresh`, `migrate --seed` does not drop existing tables.
+
+The repository includes 18 source images in `public/images/demo/products/real`. `ProductImageSeeder` copies them to `storage/app/public/products/demo` and creates three image records for each of the 84 demo products across six categories. Products in the same category share the same three images. The storage link makes the copied images accessible to the application.
+
+To restore missing image files for an already seeded catalog, run:
+
+```bash
+docker compose -f compose.dev.yaml exec workspace php artisan db:seed --class=ProductImageSeeder --no-interaction
+```
+
+Repeated runs restore missing files without deleting other images. Images added later through administration require a separate backup or inclusion in the seed sources. Commit and push seeder changes and source images before cloning on another computer.
+
 ### View all tables related to the application
 ```bash
 docker compose -f compose.dev.yaml exec mysql   mysql -ularavel -ppassword app -e "SHOW TABLES;"
@@ -162,6 +185,29 @@ Detalji o komandama, testovima i produkcionom podešavanju nalaze se u dokumentu
 ```bash
 docker compose -f compose.dev.yaml run --rm workspace php artisan migrate:fresh --seed
 ```
+
+### Obnavljanje slika proizvoda na drugom računaru
+
+Nakon preuzimanja repozitorijuma, podešavanja `.env` fajla i pokretanja razvojnog okruženja, pokrenuti:
+
+```bash
+docker compose -f compose.dev.yaml exec workspace composer install --no-interaction
+docker compose -f compose.dev.yaml exec workspace php artisan migrate --seed --no-interaction
+docker compose -f compose.dev.yaml exec workspace php artisan storage:link --no-interaction
+docker compose -f compose.dev.yaml up -d php-fpm web
+```
+
+U `.env` fajlu postaviti `APP_ENV=local`, jer demo seederi rade samo u lokalnom i test okruženju. Za razliku od `migrate:fresh`, komanda `migrate --seed` ne briše postojeće tabele.
+
+Repozitorijum sadrži 18 izvornih slika u `public/images/demo/products/real`. `ProductImageSeeder` ih kopira u `storage/app/public/products/demo` i kreira po tri zapisa o slikama za svih 84 demo proizvoda iz šest kategorija. Proizvodi iste kategorije dele iste tri slike. Storage link omogućava aplikaciji da prikaže kopirane slike.
+
+Za vraćanje nedostajućih fajlova slika u već seedovanom katalogu pokrenuti:
+
+```bash
+docker compose -f compose.dev.yaml exec workspace php artisan db:seed --class=ProductImageSeeder --no-interaction
+```
+
+Ponovno pokretanje vraća nedostajuće fajlove bez brisanja drugih slika. Slike naknadno dodate kroz administraciju zahtevaju poseban backup ili uključivanje u izvorne seed fajlove. Izmene seedera i izvorne slike treba commit-ovati i push-ovati pre preuzimanja projekta na drugom računaru.
 
 ### Pregled tabela aplikacije
 

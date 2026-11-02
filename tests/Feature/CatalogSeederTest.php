@@ -9,6 +9,7 @@ use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class CatalogSeederTest extends TestCase
@@ -17,6 +18,8 @@ class CatalogSeederTest extends TestCase
 
     public function test_demo_seeders_populate_related_data_and_can_be_repeated(): void
     {
+        Storage::fake('public');
+
         $this->seed(DatabaseSeeder::class);
         $this->assertDatabaseCount('categories', 6);
         $this->assertDatabaseCount('brands', 6);
@@ -33,8 +36,13 @@ class CatalogSeederTest extends TestCase
             $this->assertSame(1, $product->images->where('is_primary', true)->count());
             $this->assertTrue($product->compare_at_price === null || $product->compare_at_price > $product->price);
             foreach ($product->images as $image) {
-                $this->assertFileExists(public_path(ltrim($image->path, '/')));
-                $this->assertNotFalse(getimagesize(public_path(ltrim($image->path, '/'))));
+                $this->assertStringStartsWith('/storage/products/demo/', $image->path);
+                $storagePath = substr($image->path, strlen('/storage/'));
+                Storage::disk('public')->assertExists($storagePath);
+                $this->assertSame(
+                    file_get_contents(public_path('images/demo/products/real/'.basename($storagePath))),
+                    Storage::disk('public')->get($storagePath),
+                );
             }
         }
         $admin = User::where('email', 'admin@voltio.test')->firstOrFail();
@@ -45,7 +53,11 @@ class CatalogSeederTest extends TestCase
         $product = Product::firstOrFail();
         $product->price = '77.00';
         $product->save();
+        Storage::disk('public')->delete('products/demo/laptops-1.jpg');
+        Storage::disk('public')->put('products/custom.jpg', 'Custom product image');
         $this->seed(DatabaseSeeder::class);
+        Storage::disk('public')->assertExists('products/demo/laptops-1.jpg');
+        $this->assertSame('Custom product image', Storage::disk('public')->get('products/custom.jpg'));
         $this->assertDatabaseCount('products', 84);
         $this->assertDatabaseCount('product_images', 252);
         $this->assertDatabaseCount('wishlists', 9);
@@ -56,9 +68,11 @@ class CatalogSeederTest extends TestCase
 
     public function test_seeded_catalog_renders_in_storefront_and_admin(): void
     {
+        Storage::fake('public');
+
         $this->seed(DatabaseSeeder::class);
         $this->withoutVite();
-        $this->get('/')->assertOk()->assertSee('/images/demo/products/', false);
+        $this->get('/')->assertOk()->assertSee('/storage/products/demo/', false);
         foreach (Category::all() as $category) {
             $this->get('/categories/'.$category->slug)->assertOk()->assertSee('page=2', false);
             $product = $category->products()->active()->firstOrFail();
