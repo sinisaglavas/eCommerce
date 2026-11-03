@@ -26,7 +26,7 @@ class ExpireUnpaidOrders extends Command
         $expired = 0;
 
         Order::query()
-            ->whereIn('status', ['awaiting_payment', 'pending'])
+            ->where('status', 'pending')
             ->where('payment_status', 'unpaid')
             ->where('created_at', '<=', $cutoff)
             ->eachById(function (Order $order) use (&$expired): void {

@@ -32,7 +32,7 @@ class AdminCatalogPreviewTest extends TestCase
         $this->actingAs(User::factory()->create(['is_admin' => true]));
         $category = Category::factory()->create(['name' => 'Database category']);
         $brand = Brand::factory()->create(['name' => 'Database brand']);
-        $order = Order::factory()->create(['number' => 'ORD-RECENT-1001', 'status' => 'awaiting_payment']);
+        $order = Order::factory()->create(['number' => 'ORD-RECENT-1001', 'status' => 'pending']);
         $product = Product::factory()->for($category)->for($brand)->create(['name' => 'Database product', 'price' => 123.45, 'is_active' => false]);
         Product::factory()->count(12)->for($category)->for($brand)->create();
         $this->get('/admin/categories')->assertOk()->assertSee('Database category');
@@ -47,8 +47,8 @@ class AdminCatalogPreviewTest extends TestCase
             ->assertViewHas('ordersCount', 1)
             ->assertViewHas('recentOrders', fn ($orders) => $orders->contains($order))
             ->assertSee('ORD-RECENT-1001')
-            ->assertSee('Awaiting Payment');
-        $this->get('/admin/orders')->assertOk()->assertSee('ORD-RECENT-1001')->assertSee('Awaiting Payment');
+            ->assertSee('Pending');
+        $this->get('/admin/orders')->assertOk()->assertSee('ORD-RECENT-1001')->assertSee('Pending');
         $this->patch(route('admin.orders.status', $order), [
             'status' => 'paid',
             'shipping_carrier' => 'Voltio Express',

@@ -9,10 +9,7 @@
                     <h1 class="h2 fw-bold section-title mt-2 mb-1">Track order {{ $order->number }}</h1>
                     <p class="text-secondary mb-0">Placed {{ $order->created_at->format('d M Y, H:i') }}</p>
                 </div>
-                <div class="d-flex flex-wrap justify-content-end gap-2">
-                    <span class="badge rounded-pill text-bg-warning fs-6 px-3 py-2">{{ $order->statusLabel() }}</span>
-                    <span class="badge rounded-pill text-bg-secondary fs-6 px-3 py-2">{{ $order->paymentStatusLabel() }}</span>
-                </div>
+                @include('partials.order-status', ['order' => $order])
             </div>
 
             <div class="row g-4">

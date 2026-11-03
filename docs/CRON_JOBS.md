@@ -10,7 +10,7 @@ The application registers scheduled tasks in `routes/console.php`. The first v2.
 
 ## Expiring unpaid orders
 
-An order is eligible when its order status is `awaiting_payment` or `pending`, its payment status is `unpaid`, and it was created at least 48 hours ago.
+An order is eligible when its order status is `pending`, its payment status is `unpaid`, and it was created at least 48 hours ago.
 
 The command updates both statuses and creates an `order_status_histories` record. Each order is processed in its own database transaction. Running the command again is safe because failed orders no longer match the query.
 
@@ -62,7 +62,7 @@ Aplikacija registruje zakazane zadatke u `routes/console.php`. Prvi v2.0 zadatak
 
 ## Isticanje neplaćenih porudžbina
 
-Porudžbina ispunjava uslove kada je njen status `awaiting_payment` ili `pending`, status plaćanja `unpaid`, a kreirana je pre najmanje 48 sati.
+Porudžbina ispunjava uslove kada je njen status `pending`, status plaćanja `unpaid`, a kreirana je pre najmanje 48 sati.
 
 Komanda menja oba statusa i upisuje zapis u `order_status_histories`. Svaka porudžbina se obrađuje u sopstvenoj transakciji baze. Ponovno pokretanje je bezbedno jer porudžbine sa statusom `payment_failed` više ne ispunjavaju uslov.
 

@@ -15,16 +15,23 @@ class CronJobsTest extends TestCase
     {
         Carbon::setTestNow(Carbon::parse('2026-10-25 12:00:00'));
         $expiredOrder = Order::factory()->create([
-            'status' => 'awaiting_payment',
+            'status' => 'pending',
             'payment_status' => 'unpaid',
             'created_at' => now()->subHours(49),
             'updated_at' => now()->subHours(49),
         ]);
         $recentOrder = Order::factory()->create([
-            'status' => 'awaiting_payment',
+            'status' => 'pending',
             'payment_status' => 'unpaid',
             'created_at' => now()->subHours(47),
             'updated_at' => now()->subHours(47),
+        ]);
+
+        $paidOrder = Order::factory()->create([
+            'status' => 'paid',
+            'payment_status' => 'paid',
+            'created_at' => now()->subHours(49),
+            'updated_at' => now()->subHours(49),
         ]);
 
         $this->artisan('orders:expire-unpaid')
@@ -38,12 +45,18 @@ class CronJobsTest extends TestCase
         ]);
         $this->assertDatabaseHas('orders', [
             'id' => $recentOrder->id,
-            'status' => 'awaiting_payment',
+            'status' => 'pending',
             'payment_status' => 'unpaid',
         ]);
+        $this->assertDatabaseHas('orders', [
+            'id' => $paidOrder->id,
+            'status' => 'paid',
+            'payment_status' => 'paid',
+        ]);
+        $this->assertDatabaseMissing('order_status_histories', ['order_id' => $paidOrder->id]);
         $this->assertDatabaseHas('order_status_histories', [
             'order_id' => $expiredOrder->id,
-            'from_status' => 'awaiting_payment',
+            'from_status' => 'pending',
             'to_status' => 'payment_failed',
         ]);
     }

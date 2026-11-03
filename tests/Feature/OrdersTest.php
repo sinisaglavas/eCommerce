@@ -26,6 +26,46 @@ class OrdersTest extends TestCase
             ->assertDontSee('ORD-OTHER-ORDER');
     }
 
+    public function test_paid_order_shows_payment_confirmation_and_delivery_process_indicator(): void
+    {
+        $this->withoutVite();
+        $user = User::factory()->create();
+        $order = Order::factory()->for($user)->create(['status' => 'paid', 'payment_status' => 'paid']);
+
+        foreach ([route('orders.index'), route('orders.show', $order)] as $url) {
+            $this->actingAs($user)->get($url)->assertOk()
+                ->assertSee('Paid')
+                ->assertSee('Payment confirmed · Delivery process started');
+        }
+    }
+
+    public function test_inactive_or_unpaid_orders_do_not_show_delivery_process_confirmation(): void
+    {
+        $this->withoutVite();
+        $user = User::factory()->create();
+
+        foreach ([['cancelled', 'paid'], ['pending', 'unpaid'], ['payment_failed', 'failed'], ['processing', 'unpaid']] as [$status, $paymentStatus]) {
+            $order = Order::factory()->for($user)->create(['status' => $status, 'payment_status' => $paymentStatus]);
+
+            $this->actingAs($user)->get(route('orders.show', $order))->assertOk()
+                ->assertDontSee('Payment confirmed · Delivery process started');
+        }
+
+        $this->get(route('orders.index'))->assertOk()
+            ->assertDontSee('Payment confirmed · Delivery process started');
+    }
+
+    public function test_completed_order_shows_delivered_confirmation(): void
+    {
+        $this->withoutVite();
+        $user = User::factory()->create();
+        $order = Order::factory()->for($user)->create(['status' => 'completed', 'payment_status' => 'paid']);
+
+        $this->actingAs($user)->get(route('orders.show', $order))->assertOk()
+            ->assertSee('Payment confirmed · Delivered')
+            ->assertDontSee('Delivery process started');
+    }
+
     public function test_orders_page_requires_login(): void
     {
         $this->get(route('orders.index'))->assertRedirect(route('login'));
@@ -45,9 +85,9 @@ class OrdersTest extends TestCase
         ]);
         OrderItem::factory()->for($order)->create(['product_name' => 'Tracking laptop', 'quantity' => 2]);
         $order->statusHistories()->createMany([
-            ['to_status' => 'awaiting_payment', 'created_at' => now()->subDays(2), 'updated_at' => now()->subDays(2)],
-            ['from_status' => 'awaiting_payment', 'to_status' => 'paid', 'created_at' => now()->subDay(), 'updated_at' => now()->subDay()],
-            ['from_status' => 'paid', 'to_status' => 'shipped'],
+            ['to_status' => 'paid', 'created_at' => now()->subDays(2), 'updated_at' => now()->subDays(2)],
+            ['from_status' => 'paid', 'to_status' => 'processing', 'created_at' => now()->subDay(), 'updated_at' => now()->subDay()],
+            ['from_status' => 'processing', 'to_status' => 'shipped'],
         ]);
 
         $this->actingAs($user)->get(route('orders.show', $order))

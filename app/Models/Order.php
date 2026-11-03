@@ -12,7 +12,6 @@ use Illuminate\Support\Str;
 class Order extends Model
 {
     public const array STATUS_LABELS = [
-        'awaiting_payment' => 'Awaiting Payment',
         'paid' => 'Paid',
         'processing' => 'Processing',
         'shipped' => 'Shipped',
@@ -31,14 +30,13 @@ class Order extends Model
     ];
 
     private const array STATUS_TRANSITIONS = [
-        'awaiting_payment' => ['paid', 'cancelled', 'payment_failed'],
         'paid' => ['processing', 'cancelled'],
         'processing' => ['shipped', 'cancelled'],
         'shipped' => ['completed'],
         'completed' => [],
         'cancelled' => [],
-        'payment_failed' => ['awaiting_payment', 'cancelled'],
-        'pending' => ['awaiting_payment', 'cancelled'],
+        'payment_failed' => ['paid', 'cancelled'],
+        'pending' => ['paid', 'cancelled'],
     ];
 
     /** @use HasFactory<OrderFactory> */
