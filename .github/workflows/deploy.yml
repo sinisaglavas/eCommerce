@@ -3,6 +3,14 @@ name: CI/CD Pipeline
 
 on:
   workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Docker image tag (for example v1.2.3; use a new tag for each release)"
+        required: true
+        type: string
+
+env:
+  IMAGE_TAG: ${{ inputs.image_tag }}
 
 jobs:
   tests:
@@ -16,6 +24,14 @@ jobs:
       QUEUE_CONNECTION: sync
 
     steps:
+      - name: Validate image tag
+        shell: bash
+        run: |
+          if [[ ! "$IMAGE_TAG" =~ ^[a-zA-Z0-9_][a-zA-Z0-9_.-]{0,127}$ || "${IMAGE_TAG,,}" == "latest" ]]; then
+            echo "::error::Enter a valid Docker tag other than latest (for example v1.2.3)."
+            exit 1
+          fi
+
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -73,7 +89,7 @@ jobs:
           file: ./docker/common/php-fpm/Dockerfile
           target: production
           push: true
-          tags: sinisaglavas/voltio-php-fpm:latest
+          tags: sinisaglavas/voltio-php-fpm:${{ env.IMAGE_TAG }}
 
       # 4. Automatski Build i Push za Web/Nginx sliku
       - name: Build and Push Nginx Image
@@ -82,15 +98,20 @@ jobs:
           context: .
           file: ./docker/production/nginx/Dockerfile
           push: true
-          tags: sinisaglavas/voltio-web:latest
+          tags: sinisaglavas/voltio-web:${{ env.IMAGE_TAG }}
 
   deploy:
     needs: build-and-push
     runs-on: self-hosted
 
     steps:
+      - name: Checkout deployment configuration
+        uses: actions/checkout@v4
+
       - name: Deploy application on VM
+        shell: bash
         run: |
+          cp "$GITHUB_WORKSPACE/compose.deploy.yaml" /home/devops/eCommerce/compose.deploy.yaml
           cd /home/devops/eCommerce
           docker compose -f compose.deploy.yaml pull
           docker compose -f compose.deploy.yaml up -d --remove-orphans

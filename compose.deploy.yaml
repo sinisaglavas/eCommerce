@@ -1,6 +1,6 @@
 services:
   web:
-    image: sinisaglavas/voltio-web:latest
+    image: sinisaglavas/voltio-web:${IMAGE_TAG:?Set IMAGE_TAG to the release tag}
     restart: unless-stopped
     volumes:
       - laravel-storage-production:/var/www/storage:ro
@@ -14,7 +14,7 @@ services:
         condition: service_healthy
 
   php-fpm:
-    image: sinisaglavas/voltio-php-fpm:latest
+    image: sinisaglavas/voltio-php-fpm:${IMAGE_TAG:?Set IMAGE_TAG to the release tag}
     restart: unless-stopped
     volumes:
       - laravel-public-assets:/var/www/public/build
@@ -34,7 +34,7 @@ services:
         condition: service_completed_successfully
 
   migrate:
-    image: sinisaglavas/voltio-php-fpm:latest
+    image: sinisaglavas/voltio-php-fpm:${IMAGE_TAG:?Set IMAGE_TAG to the release tag}
     working_dir: /var/www
     command: php artisan migrate --force
     env_file:
