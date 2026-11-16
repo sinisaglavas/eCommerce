@@ -95,9 +95,9 @@ class AdminCatalogPreviewTest extends TestCase
     public function test_empty_database_and_orders_page_do_not_show_demo_data(): void
     {
         $this->actingAs(User::factory()->create(['is_admin' => true]));
-        $this->get('/admin/products')->assertOk()->assertSee('Nema proizvoda za prikaz.');
-        $this->get('/admin/categories')->assertOk()->assertSee('Nema kategorija za prikaz');
-        $this->get('/admin/orders')->assertOk()->assertSee('Nema porudžbina za prikaz.')->assertDontSee('DEMO-');
+        $this->get('/admin/products')->assertOk()->assertSee('No products to display.');
+        $this->get('/admin/categories')->assertOk()->assertSee('No categories to display');
+        $this->get('/admin/orders')->assertOk()->assertSee('No orders to display.')->assertDontSee('DEMO-');
         $this->get('/admin/orders/DEMO-1002')->assertNotFound();
     }
 
@@ -126,7 +126,7 @@ class AdminCatalogPreviewTest extends TestCase
 
         $this->get(route('admin.categories.edit', $category))
             ->assertOk()
-            ->assertSee('Izmeni kategoriju');
+            ->assertSee('Edit category');
 
         $this->put(route('admin.categories.update', $category), [
             'name' => 'Gaming laptops',

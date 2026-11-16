@@ -66,6 +66,35 @@ class CatalogSeederTest extends TestCase
         $this->assertSame('Edited administrator', $admin->fresh()->name);
     }
 
+    public function test_translation_migration_updates_only_original_demo_descriptions(): void
+    {
+        $demoCategory = Category::factory()->create([
+            'slug' => 'laptops',
+            'description' => 'Prenosivi računari za posao, studije i kreativni rad.',
+        ]);
+        $customizedCategory = Category::factory()->create([
+            'slug' => 'tablets',
+            'description' => 'A description written by the store administrator.',
+        ]);
+        $otherCategory = Category::factory()->create([
+            'slug' => 'custom-category',
+            'description' => 'Prenosivi računari za posao, studije i kreativni rad.',
+        ]);
+        $migration = require database_path('migrations/2026_11_16_155210_translate_default_category_descriptions_to_english.php');
+
+        $migration->up();
+        $migration->up();
+
+        $this->assertSame('Laptops for work, study, and creative projects.', $demoCategory->fresh()->description);
+        $this->assertSame('A description written by the store administrator.', $customizedCategory->fresh()->description);
+        $this->assertSame('Prenosivi računari za posao, studije i kreativni rad.', $otherCategory->fresh()->description);
+
+        $migration->down();
+
+        $this->assertSame('Prenosivi računari za posao, studije i kreativni rad.', $demoCategory->fresh()->description);
+        $this->assertSame('A description written by the store administrator.', $customizedCategory->fresh()->description);
+    }
+
     public function test_seeded_catalog_renders_in_storefront_and_admin(): void
     {
         Storage::fake('public');

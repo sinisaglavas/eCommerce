@@ -29,7 +29,7 @@ class WishlistController extends Controller
 
     public function toggle(Request $request, Product $product): JsonResponse
     {
-        Log::info('Proizvod koji je stigao u kontroler:', $product->toArray());
+        Log::info('Product received by controller:', $product->toArray());
         $wishlistItem = Wishlist::query()
             ->whereBelongsTo($request->user())
             ->whereBelongsTo($product)

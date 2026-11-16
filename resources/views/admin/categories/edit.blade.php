@@ -1,15 +1,15 @@
 @extends('layouts.admin')
 
-@section('title', 'Izmeni kategoriju')
+@section('title', 'Edit category')
 
 @section('content')
     <div class="mb-4">
         @if (Route::has('admin.categories.index'))
-            <a href="{{ route('admin.categories.index') }}" class="small text-decoration-none">← Sve kategorije</a>
+            <a href="{{ route('admin.categories.index') }}" class="small text-decoration-none">← All categories</a>
         @endif
-        <p class="eyebrow mt-4 mb-2">UPRAVLJANJE KATALOGOM</p>
-        <h1 class="h2 fw-bold">Izmeni kategoriju</h1>
-        <p class="text-body-secondary">Ažurirajte naziv i izgled kategorije u prodavnici.</p>
+        <p class="eyebrow mt-4 mb-2">CATALOG MANAGEMENT</p>
+        <h1 class="h2 fw-bold">Edit category</h1>
+        <p class="text-body-secondary">Update the category name and appearance in the store.</p>
     </div>
     @include('admin.categories._form', [
         'category' => $category ?? null,

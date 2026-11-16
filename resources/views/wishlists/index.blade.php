@@ -23,8 +23,8 @@
           @else
             <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap mb-4 p-3 rounded-3 border bg-surface-2">
               <div>
-                <p class="small fw-semibold mb-1">Odaberite proizvode</p>
-                <p class="small text-secondary mb-0">Dodajte jedan ili više sačuvanih proizvoda u korpu.</p>
+                <p class="small fw-semibold mb-1">Select products</p>
+                <p class="small text-secondary mb-0">Add one or more saved products to your cart.</p>
               </div>
               <button type="button" class="btn btn-primary" data-wishlist-add-selected disabled>
                 Add selected to cart
