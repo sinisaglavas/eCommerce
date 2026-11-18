@@ -23,6 +23,10 @@ services:
       - laravel-production
     env_file:
       - .env
+    environment:
+      CACHE_STORE: redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     healthcheck:
       test: [ "CMD-SHELL", "php-fpm-healthcheck || exit 1" ]
       interval: 10s
@@ -32,6 +36,8 @@ services:
     depends_on:
       migrate:
         condition: service_completed_successfully
+      redis:
+        condition: service_healthy
 
   migrate:
     image: sinisaglavas/voltio-php-fpm:${IMAGE_TAG:?Set IMAGE_TAG to the release tag}
@@ -39,12 +45,29 @@ services:
     command: php artisan migrate --force
     env_file:
       - .env
+    environment:
+      CACHE_STORE: redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     networks:
       - laravel-production
     depends_on:
       mysql:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     restart: "no"
+
+  redis:
+    image: redis:7.2-alpine
+    restart: unless-stopped
+    networks:
+      - laravel-production
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
   mysql:
     image: mysql:8.4
