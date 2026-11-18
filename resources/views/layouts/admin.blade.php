@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="sr-Latn" data-bs-theme="dark">
+<html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -41,21 +41,21 @@
     </style>
 </head>
 <body>
-<a href="#main-content" class="visually-hidden-focusable position-absolute bg-dark p-3">Pređi na sadržaj</a>
+<a href="#main-content" class="visually-hidden-focusable position-absolute bg-dark p-3">Skip to content</a>
 <div class="admin-shell">
-    <aside class="admin-sidebar" aria-label="Admin navigacija">
+    <aside class="admin-sidebar" aria-label="Admin navigation">
         <div class="sidebar-inner">
             <a href="{{ url('/') }}" class="d-flex align-items-center gap-2 text-decoration-none text-body fw-bold fs-5 mb-4">
                 <span class="brand-mark" aria-hidden="true">ϟ</span>
                 <span class="text-break">{{ config('app.name') }}</span>
             </a>
             <p class="eyebrow px-3 mb-2">ADMIN PANEL</p>
-            <nav class="admin-nav nav flex-column gap-1" aria-label="Upravljanje prodavnicom">
+            <nav class="admin-nav nav flex-column gap-1" aria-label="Store management">
                 @foreach ([
                     ['route' => 'admin.dashboard', 'pattern' => 'admin.dashboard', 'label' => 'Dashboard', 'icon' => '▦'],
-                    ['route' => 'admin.categories', 'pattern' => 'admin.categories', 'label' => 'Kategorije', 'icon' => '▤'],
-                    ['route' => 'admin.products', 'pattern' => 'admin.products*', 'label' => 'Proizvodi', 'icon' => '◇'],
-                    ['route' => 'admin.orders', 'pattern' => 'admin.orders*', 'label' => 'Porudžbine', 'icon' => '▧'],
+                    ['route' => 'admin.categories', 'pattern' => 'admin.categories', 'label' => 'Categories', 'icon' => '▤'],
+                    ['route' => 'admin.products', 'pattern' => 'admin.products*', 'label' => 'Products', 'icon' => '◇'],
+                    ['route' => 'admin.orders', 'pattern' => 'admin.orders*', 'label' => 'Orders', 'icon' => '▧'],
                 ] as $item)
                     @if (Route::has($item['route']))
                         <a href="{{ route($item['route']) }}" class="nav-link {{ request()->routeIs($item['pattern']) ? 'active' : '' }}" @if(request()->routeIs($item['pattern'])) aria-current="page" @endif>
@@ -68,22 +68,22 @@
             </nav>
             <div class="mt-auto pt-4 d-none d-lg-block">
                 <div class="border-top pt-3 px-3">
-                    <p class="small text-body-secondary mb-1">Upravljanje prodavnicom</p>
-                    <span class="eyebrow">VERZIJA 1.0</span>
+                    <p class="small text-body-secondary mb-1">Store management</p>
+                    <span class="eyebrow">VERSION 1.0</span>
                 </div>
             </div>
         </div>
     </aside>
     <div class="admin-main d-flex flex-column">
         <header class="admin-header border-bottom px-3 px-md-4 py-3 d-flex align-items-center justify-content-between gap-3 flex-wrap">
-            <a href="{{ url('/') }}" class="small text-decoration-none">← Nazad u prodavnicu</a>
+            <a href="{{ url('/') }}" class="small text-decoration-none">← Back to store</a>
             <div class="d-flex align-items-center gap-3">
                 @auth
                     <div class="text-end"><div class="small fw-semibold">{{ auth()->user()->name }}</div><div class="small text-body-secondary">Admin panel</div></div>
                     @if (Route::has('logout'))
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="btn btn-outline-secondary btn-sm">Odjavi se</button>
+                            <button type="submit" class="btn btn-outline-secondary btn-sm">Sign out</button>
                         </form>
                     @endif
                 @endauth

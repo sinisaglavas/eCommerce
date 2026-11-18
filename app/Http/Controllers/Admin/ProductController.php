@@ -55,6 +55,6 @@ class ProductController extends Controller
             ['path' => $validated['image'], 'is_primary' => true],
         );
 
-        return redirect()->route('admin.products')->with('status', 'Proizvod je uspešno izmenjen.');
+        return redirect()->route('admin.products')->with('status', 'Product updated successfully.');
     }
 }

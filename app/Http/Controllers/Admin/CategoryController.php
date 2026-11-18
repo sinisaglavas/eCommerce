@@ -30,7 +30,7 @@ class CategoryController extends Controller
             'is_active' => true,
         ]);
 
-        return redirect()->route('admin.categories')->with('status', 'Kategorija je uspešno kreirana.');
+        return redirect()->route('admin.categories')->with('status', 'Category created successfully.');
     }
 
     public function index(): View
@@ -55,17 +55,17 @@ class CategoryController extends Controller
 
         $category->update($validated);
 
-        return redirect()->route('admin.categories')->with('status', 'Kategorija je uspešno izmenjena.');
+        return redirect()->route('admin.categories')->with('status', 'Category updated successfully.');
     }
 
     public function destroy(Category $category): RedirectResponse
     {
         if ($category->products()->exists()) {
-            return redirect()->route('admin.categories')->with('error', 'Kategorija ne može da se obriše dok sadrži proizvode.');
+            return redirect()->route('admin.categories')->with('error', 'A category cannot be deleted while it contains products.');
         }
 
         $category->delete();
 
-        return redirect()->route('admin.categories')->with('status', 'Kategorija je uspešno obrisana.');
+        return redirect()->route('admin.categories')->with('status', 'Category deleted successfully.');
     }
 }

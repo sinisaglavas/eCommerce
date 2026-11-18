@@ -4,26 +4,26 @@
 
 @section('content')
     <div class="mb-4">
-        <p class="eyebrow mb-2">PREGLED PRODAVNICE</p>
+        <p class="eyebrow mb-2">STORE OVERVIEW</p>
         <h1 class="h2 fw-bold mb-2">Dashboard</h1>
-        <p class="text-body-secondary mb-0">Katalog i porudžbine na jednom mestu.</p>
+        <p class="text-body-secondary mb-0">Your catalog and orders in one place.</p>
     </div>
 
     <section class="panel welcome-panel p-4 mb-4" aria-labelledby="welcome-title">
         <div class="d-flex justify-content-between align-items-center gap-3 flex-wrap">
             <div>
-                <h2 id="welcome-title" class="h4 fw-semibold">Dobro došli{{ auth()->check() ? ', '.auth()->user()->name : '' }}.</h2>
-                <p class="text-body-secondary mb-0">Organizujte ponudu i pratite kupovine svojih korisnika.</p>
+                <h2 id="welcome-title" class="h4 fw-semibold">Welcome{{ auth()->check() ? ', '.auth()->user()->name : '' }}.</h2>
+                <p class="text-body-secondary mb-0">Manage your catalog and track customer orders.</p>
             </div>
-            <a href="{{ url('/') }}" class="btn btn-outline-secondary">Otvori prodavnicu <span aria-hidden="true">↗</span></a>
+            <a href="{{ url('/') }}" class="btn btn-outline-secondary">Open store <span aria-hidden="true">↗</span></a>
         </div>
     </section>
 
     <div class="row g-3 mb-4">
         @foreach ([
-            ['label' => 'Proizvodi', 'value' => $productsCount ?? null, 'icon' => '◇', 'description' => 'Proizvodi u katalogu'],
-            ['label' => 'Kategorije', 'value' => $categoriesCount ?? null, 'icon' => '▤', 'description' => 'Organizacija vaše ponude'],
-            ['label' => 'Porudžbine', 'value' => $ordersCount ?? null, 'icon' => '▧', 'description' => 'Ukupan broj porudžbina'],
+            ['label' => 'Products', 'value' => $productsCount ?? null, 'icon' => '◇', 'description' => 'Products in the catalog'],
+            ['label' => 'Categories', 'value' => $categoriesCount ?? null, 'icon' => '▤', 'description' => 'Organize your catalog'],
+            ['label' => 'Orders', 'value' => $ordersCount ?? null, 'icon' => '▧', 'description' => 'Total number of orders'],
         ] as $stat)
             <div class="col-12 col-md-4">
                 <section class="panel p-4 h-100" aria-label="{{ $stat['label'] }}">
@@ -32,7 +32,7 @@
                         <span class="stat-icon" aria-hidden="true">{{ $stat['icon'] }}</span>
                     </div>
                     <div class="stat-value">{{ $stat['value'] === null ? '—' : number_format($stat['value'], 0, ',', '.') }}</div>
-                    <p class="small text-body-secondary mb-0">{{ $stat['value'] === null ? 'Podaci još nisu dostupni' : $stat['description'] }}</p>
+                    <p class="small text-body-secondary mb-0">{{ $stat['value'] === null ? 'Data is not available yet' : $stat['description'] }}</p>
                 </section>
             </div>
         @endforeach
@@ -43,11 +43,11 @@
             <section class="panel h-100" aria-labelledby="orders-title">
                 <div class="p-4 border-bottom d-flex align-items-center justify-content-between gap-3 flex-wrap">
                     <div>
-                        <h2 id="orders-title" class="h5 mb-1">Poslednje porudžbine</h2>
-                        <p class="small text-body-secondary mb-0">Prikazano je do 5 najnovijih porudžbina.</p>
+                        <h2 id="orders-title" class="h5 mb-1">Recent orders</h2>
+                        <p class="small text-body-secondary mb-0">Showing up to 5 recent orders.</p>
                     </div>
                     @if (Route::has('admin.orders'))
-                        <a href="{{ route('admin.orders') }}" class="btn btn-outline-secondary btn-sm">Sve porudžbine</a>
+                        <a href="{{ route('admin.orders') }}" class="btn btn-outline-secondary btn-sm">All orders</a>
                     @endif
                 </div>
                 @if ($recentOrders->isNotEmpty())
@@ -55,10 +55,10 @@
                         <table class="table table-dark table-hover admin-table align-middle mb-0">
                             <thead>
                                 <tr>
-                                    <th scope="col">Porudžbina</th>
-                                    <th scope="col">Kupac</th>
+                                    <th scope="col">Order</th>
+                                    <th scope="col">Customer</th>
                                     <th scope="col">Status</th>
-                                    <th scope="col" class="text-end">Iznos</th>
+                                    <th scope="col" class="text-end">Amount</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -84,18 +84,18 @@
                 @else
                     <div class="text-center py-5 px-4">
                         <div class="empty-symbol mb-3" aria-hidden="true">▧</div>
-                        <h3 class="h6">Nema porudžbina za prikaz.</h3>
-                        <p class="small text-body-secondary mb-0">Ovde će biti prikazano poslednjih pet porudžbina.</p>
+                        <h3 class="h6">No orders to display.</h3>
+                        <p class="small text-body-secondary mb-0">Your five most recent orders will appear here.</p>
                     </div>
                 @endif
             </section>
         </div>
         <div class="col-12 col-xl-4">
             <section class="panel p-4 h-100" aria-labelledby="shortcuts-title">
-                <h2 id="shortcuts-title" class="h5 mb-2">Brze akcije</h2>
-                <p class="small text-body-secondary mb-4">Dopunite i organizujte ponudu prodavnice.</p>
+                <h2 id="shortcuts-title" class="h5 mb-2">Quick actions</h2>
+                <p class="small text-body-secondary mb-4">Expand and organize your store catalog.</p>
                 <div class="d-grid gap-3">
-                    @foreach (['admin.products.create' => 'Dodaj proizvod', 'admin.categories.create' => 'Dodaj kategoriju'] as $route => $label)
+                    @foreach (['admin.products.create' => 'Add product', 'admin.categories.create' => 'Add category'] as $route => $label)
                         @if (Route::has($route))
                             <a href="{{ route($route) }}" class="btn {{ $loop->first ? 'btn-primary' : 'btn-outline-secondary' }} py-2">+ {{ $label }}</a>
                         @else

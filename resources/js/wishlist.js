@@ -168,7 +168,7 @@ document.addEventListener('click', async (event) => {
         updateWishlistCount(wishlistCount);
         updateWishlistDropdown(wishlisted, productId, wishlistItem);
     } catch (error) {
-        console.error('JS Greška:', error);
+        console.error('JavaScript error:', error);
         const label = button.querySelector('[data-wishlist-label]');
         if (label) {
             label.textContent = 'Try again';

@@ -123,7 +123,7 @@
             <a href="{{ route('login') }}" class="user-chip d-flex align-items-center gap-2">
               <span class="avatar" aria-hidden="true"><svg class="ico"><use href="#i-user"/></svg></span>
                 <span class="lh-sm"><span class="d-block small text-secondary">Hello,</span>
-                    <span class="small fw-semibold">SignIn</span>
+                    <span class="small fw-semibold">Sign in</span>
                 </span>
             </a>
           @endauth

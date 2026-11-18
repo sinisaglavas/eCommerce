@@ -28,11 +28,11 @@ class OrderController extends Controller
         ]);
 
         if (! $order->canTransitionTo($validated['status'])) {
-            return back()->withErrors(['status' => 'Ova promena statusa nije dozvoljena.']);
+            return back()->withErrors(['status' => 'This status change is not allowed.']);
         }
 
         $order->update(['status' => $validated['status']]);
 
-        return back()->with('status', 'Status porudžbine je uspešno izmenjen.');
+        return back()->with('status', 'Order status updated successfully.');
     }
 }

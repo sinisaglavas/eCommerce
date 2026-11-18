@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="sr-Latn" data-bs-theme="dark">
+<html lang="en" data-bs-theme="dark">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -30,13 +30,13 @@
                 <span class="brand-mark" aria-hidden="true">ϟ</span>
                 {{ config('app.name') }}
             </a>
-            <a href="{{ url('/') }}" class="small text-decoration-none">← Nazad u prodavnicu</a>
+            <a href="{{ url('/') }}" class="small text-decoration-none">← Back to store</a>
         </div>
     </header>
     <main class="container auth-container py-4 py-md-5 flex-grow-1">
         <div class="auth-card my-md-3">
             <div class="auth-heading p-4 p-sm-5 pb-sm-4">
-                <p class="eyebrow mb-3">VAŠ NALOG</p>
+                <p class="eyebrow mb-3">YOUR ACCOUNT</p>
                 <h1 class="h3 fw-bold mb-2">@yield('heading')</h1>
                 <p class="text-body-secondary mb-0">@yield('description')</p>
             </div>
@@ -46,7 +46,7 @@
                 @endif
                 @if ($errors->any())
                     <div class="alert alert-danger small" role="alert">
-                        <p class="fw-semibold mb-1">Proverite unete podatke.</p>
+                        <p class="fw-semibold mb-1">Please check the information you entered.</p>
                         <ul class="mb-0 ps-3">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
