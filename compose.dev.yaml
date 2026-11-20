@@ -31,6 +31,10 @@ services:
     image: myapp-php-fpm:dev
     env_file:
       - .env
+    environment:
+      CACHE_STORE: redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     # user: "${UID:-1000}:${GID:-1000}"
     volumes:
       - ./:/var/www
@@ -40,6 +44,8 @@ services:
     depends_on:
       mysql:
         condition: service_started
+      redis:
+        condition: service_healthy
 
   migrate:
     image: myapp-php-fpm:dev
@@ -47,12 +53,18 @@ services:
     command: php artisan migrate --force
     env_file:
       - .env
+    environment:
+      CACHE_STORE: redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     volumes:
       - ./:/var/www
     networks:
       - laravel-development
     depends_on:
       mysql:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     restart: "no"
 
@@ -71,10 +83,17 @@ services:
         XDEBUG_LOG_LEVEL: 0
     ports:
       - '${VITE_PORT:-5173}:5173'
+    depends_on:
+      redis:
+        condition: service_healthy
     tty: true
     stdin_open: true
     env_file:
       - .env
+    environment:
+      CACHE_STORE: redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     volumes:
       - ./:/var/www
       - ./docker/development/php-fpm/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:ro
@@ -118,6 +137,12 @@ services:
 
   redis:
     image: redis:7.2-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
     networks:
       - laravel-development
 
