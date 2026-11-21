@@ -9,9 +9,11 @@ class BrandSeeder extends Seeder
 {
     public function run(): void
     {
-        foreach (['Aster', 'Novara', 'Lumen', 'Orbis', 'Vela', 'Kairo'] as $name) {
-            $slug = strtolower($name);
-            Brand::query()->firstOrCreate(['slug' => $slug], ['name' => $name, 'logo_path' => '/images/demo/brands/'.$slug.'.svg']);
+        foreach (require __DIR__.'/data/products.php' as $row) {
+            Brand::query()->firstOrCreate(['slug' => $row['brand_slug']], [
+                'name' => $row['brand_name'],
+                'logo_path' => $row['brand_logo_path'],
+            ]);
         }
     }
 }

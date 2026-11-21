@@ -17,7 +17,7 @@ class ProductSeeder extends Seeder
         foreach (require __DIR__.'/data/products.php' as $row) {
             $row['category_id'] = $categories[$row['category_slug']];
             $row['brand_id'] = $brands[$row['brand_slug']];
-            unset($row['category_slug'], $row['brand_slug'], $row['details']);
+            unset($row['category_slug'], $row['brand_slug'], $row['brand_name'], $row['brand_logo_path'], $row['details'], $row['images']);
             $row['published_at'] = now();
             Product::query()->firstOrCreate(['sku' => $row['sku']], $row);
         }

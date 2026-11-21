@@ -12,21 +12,12 @@ class ProductImageSeeder extends Seeder
     public function run(): void
     {
         $disk = Storage::disk('public');
-        $extensions = [
-            'laptops' => 'jpg',
-            'smartphones' => 'png',
-            'tvs' => 'jpg',
-            'monitors' => 'jpeg',
-            'tablets' => 'jpeg',
-            'smartwatches' => 'jpeg',
-        ];
-
         foreach (require __DIR__.'/data/products.php' as $row) {
             $product = Product::query()->where('sku', $row['sku'])->firstOrFail();
-            for ($position = 1; $position <= 3; $position++) {
-                $extension = $extensions[$row['category_slug']] ?? 'jpg';
-                $filename = $row['category_slug'].'-'.$position.'.'.$extension;
-                $sourcePath = public_path('images/demo/products/real/'.$filename);
+            foreach ($row['images'] as $index => $path) {
+                $position = $index + 1;
+                $filename = basename($path);
+                $sourcePath = public_path(ltrim($path, '/'));
                 $storagePath = 'products/demo/'.$filename;
 
                 if (! is_file($sourcePath)) {
@@ -45,6 +36,7 @@ class ProductImageSeeder extends Seeder
                     'is_primary' => $position === 1,
                 ]);
             }
+            $product->images()->whereNotIn('sort_order', [1, 2, 3])->delete();
         }
     }
 }
